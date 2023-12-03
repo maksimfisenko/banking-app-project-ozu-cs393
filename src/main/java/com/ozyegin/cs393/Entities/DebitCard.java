@@ -10,40 +10,40 @@ public class DebitCard {
     public DebitCard() {
     }
     @Id
-    private long CardNumber;
-    private LocalDate ExpirationDate;
-    private String CardName;
-    private Account Account;
+    private long cardNumber;
+    private LocalDate expirationDate;
+    private String cardName;
+    private Account account;
 
     public void setCardNumber(long cardNumber) {
-        CardNumber = cardNumber;
+        this.cardNumber = cardNumber;
     }
 
     public void setExpirationDate(LocalDate expirationDate) {
-        ExpirationDate = expirationDate;
+        this.expirationDate = expirationDate;
     }
 
     public void setCardName(String cardName) {
-        CardName = cardName;
+        this.cardName = cardName;
     }
 
-    public void setAccount(com.ozyegin.cs393.Entities.Account account) {
-        Account = account;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public long getCardNumber() {
-        return CardNumber;
+        return this.cardNumber;
     }
 
     public LocalDate getExpirationDate() {
-        return ExpirationDate;
+        return this.expirationDate;
     }
 
     public String getCardName() {
-        return CardName;
+        return this.cardName;
     }
 
-    public com.ozyegin.cs393.Entities.Account getAccount() {
-        return Account;
+    public Account getAccount() {
+        return this.account;
     }
 }

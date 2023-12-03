@@ -13,58 +13,57 @@ public class Transaction {
 
     @Id
     private long id;
-    private Account SendingAccount;
-    private Account ReceivingAccount;
+    private Account sendingAccount;
+    private Account receivingAccount;
+    private LocalDateTime timeOfTransaction;
+    private Currency currency;
+    private int amount;
 
     public void setId(long id) {
         this.id = id;
     }
 
     public void setSendingAccount(Account sendingAccount) {
-        SendingAccount = sendingAccount;
+        this.sendingAccount = sendingAccount;
     }
 
     public void setReceivingAccount(Account receivingAccount) {
-        ReceivingAccount = receivingAccount;
+        this.receivingAccount = receivingAccount;
     }
 
     public void setTimeOfTransaction(LocalDateTime timeOfTransaction) {
-        TimeOfTransaction = timeOfTransaction;
+        this.timeOfTransaction = timeOfTransaction;
     }
 
     public void setCurrency(com.ozyegin.cs393.Entities.Currency currency) {
-        Currency = currency;
+        this.currency = currency;
     }
 
     public void setAmount(int amount) {
-        Amount = amount;
+        this.amount = amount;
     }
 
-    private LocalDateTime TimeOfTransaction;
-    private Currency Currency;
-    private int Amount;
-
     public long getId() {
-        return id;
+        return this.id;
     }
 
     public Account getSendingAccount() {
-        return SendingAccount;
+        return this.sendingAccount;
     }
 
     public Account getReceivingAccount() {
-        return ReceivingAccount;
+        return this.receivingAccount;
     }
 
     public LocalDateTime getTimeOfTransaction() {
-        return TimeOfTransaction;
+        return this.timeOfTransaction;
     }
 
     public com.ozyegin.cs393.Entities.Currency getCurrency() {
-        return Currency;
+        return this.currency;
     }
 
     public int getAmount() {
-        return Amount;
+        return this.amount;
     }
 }

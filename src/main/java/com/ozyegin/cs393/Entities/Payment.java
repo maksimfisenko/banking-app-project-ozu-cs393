@@ -1,15 +1,21 @@
 package com.ozyegin.cs393.Entities;
 
+import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class Payment {
-    public Payment() {
-    }
     @Id
     private long id;
-    private DebitCard SendingCard;
+    private DebitCard sendingCard;
+    private Account receivingAccount;
+    private LocalDateTime timeOfTransaction;
+    private Currency currency;
+    private int amount;
+    public Payment() {
+    }
 
     public long getId() {
         return id;
@@ -20,47 +26,43 @@ public class Payment {
     }
 
     public void setSendingCard(DebitCard sendingCard) {
-        SendingCard = sendingCard;
+        this.sendingCard = sendingCard;
     }
 
     public void setReceivingAccount(Account receivingAccount) {
-        ReceivingAccount = receivingAccount;
+        this.receivingAccount = receivingAccount;
     }
 
     public void setTimeOfTransaction(LocalDateTime timeOfTransaction) {
-        TimeOfTransaction = timeOfTransaction;
+        this.timeOfTransaction = timeOfTransaction;
     }
 
     public void setCurrency(com.ozyegin.cs393.Entities.Currency currency) {
-        Currency = currency;
+        this.currency = currency;
     }
 
     public void setAmount(int amount) {
-        Amount = amount;
+        this.amount = amount;
     }
 
     public DebitCard getSendingCard() {
-        return SendingCard;
+        return this.sendingCard;
     }
 
     public Account getReceivingAccount() {
-        return ReceivingAccount;
+        return this.receivingAccount;
     }
 
     public LocalDateTime getTimeOfTransaction() {
-        return TimeOfTransaction;
+        return this.timeOfTransaction;
     }
 
-    public com.ozyegin.cs393.Entities.Currency getCurrency() {
-        return Currency;
+    public Currency getCurrency() {
+        return this.currency;
     }
 
     public int getAmount() {
-        return Amount;
+        return this.amount;
     }
 
-    private Account ReceivingAccount;
-    private LocalDateTime TimeOfTransaction;
-    private Currency Currency;
-    private int Amount;
 }

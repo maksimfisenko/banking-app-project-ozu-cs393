@@ -1,34 +1,37 @@
 package com.ozyegin.cs393.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Account {
     @Id
     private Long number;
+    @Column(nullable = false)
     private String name;
     @ManyToOne
+    @JoinColumn(name = "currencyId")
     private Currency currency;
     @ManyToOne
+    @JoinColumn(name = "accountType")
     private AccountType type;
-    private int amount;
-    @ManyToOne
-    private User owner;
+    @Column(nullable = false)
+    private double amount;
+    @Column(nullable = false)
     private LocalDate openingDate;
+    @ManyToOne
+    @JoinColumn(name = "ownerId")
+    private User owner;
+    @OneToMany(mappedBy = "sendingAccount")
+    private List<Transaction> sentTransactions;
+    @OneToMany(mappedBy = "receivingAccount")
+    private List<Transaction> receivedTransactions;
+    @OneToMany(mappedBy = "account")
+    private List<DebitCard> debitCards;
 
-    public Account(Long number, String name, Currency currency, AccountType type, int amount, User owner,
-                   LocalDate openingDate) {
-        this.number = number;
-        this.name = name;
-        this.currency = currency;
-        this.type = type;
-        this.amount = amount;
-        this.owner = owner;
-        this.openingDate = openingDate;
+
+    public Account() {
     }
 
     public Long getNumber() {
@@ -63,11 +66,11 @@ public class Account {
         this.type = type;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -85,5 +88,29 @@ public class Account {
 
     public void setOpeningDate(LocalDate openingDate) {
         this.openingDate = openingDate;
+    }
+
+    public List<Transaction> getSentTransactions() {
+        return sentTransactions;
+    }
+
+    public void setSentTransactions(List<Transaction> sentTransactions) {
+        this.sentTransactions = sentTransactions;
+    }
+
+    public List<Transaction> getReceivedTransactions() {
+        return receivedTransactions;
+    }
+
+    public void setReceivedTransactions(List<Transaction> receivedTransactions) {
+        this.receivedTransactions = receivedTransactions;
+    }
+
+    public List<DebitCard> getDebitCards() {
+        return debitCards;
+    }
+
+    public void setDebitCards(List<DebitCard> debitCards) {
+        this.debitCards = debitCards;
     }
 }

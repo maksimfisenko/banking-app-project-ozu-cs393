@@ -1,23 +1,31 @@
 package com.ozyegin.cs393.Entities;
 
-import jakarta.persistence.Entity;
-import org.springframework.data.annotation.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class Payment {
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "sendingCardNumber")
     private DebitCard sendingCard;
+    @ManyToOne
+    @JoinColumn(name = "receivingAccountId")
     private Account receivingAccount;
-    private LocalDateTime timeOfTransaction;
+    @Column(nullable = false)
+    private LocalDateTime timeOfPayment;
+    @ManyToOne
+    @JoinColumn(name = "currencyId")
     private Currency currency;
-    private int amount;
+    @Column(nullable = false)
+    private double amount;
+
     public Payment() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -33,15 +41,15 @@ public class Payment {
         this.receivingAccount = receivingAccount;
     }
 
-    public void setTimeOfTransaction(LocalDateTime timeOfTransaction) {
-        this.timeOfTransaction = timeOfTransaction;
+    public void setTimeOfPayment(LocalDateTime timeOfTransaction) {
+        this.timeOfPayment = timeOfTransaction;
     }
 
     public void setCurrency(com.ozyegin.cs393.Entities.Currency currency) {
         this.currency = currency;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -53,15 +61,15 @@ public class Payment {
         return this.receivingAccount;
     }
 
-    public LocalDateTime getTimeOfTransaction() {
-        return this.timeOfTransaction;
+    public LocalDateTime getTimeOfPayment() {
+        return this.timeOfPayment;
     }
 
     public Currency getCurrency() {
         return this.currency;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return this.amount;
     }
 

@@ -1,24 +1,20 @@
 package com.ozyegin.cs393.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private char symbol;
+    @Column(nullable = false)
     private double exchangeRateToUsd;
 
-    public Currency(Long id, String name, char symbol, double exchangeRatetoUsd) {
-        this.id = id;
-        this.name = name;
-        this.symbol = symbol;
-        this.exchangeRateToUsd = exchangeRatetoUsd;
+    public Currency() {
     }
 
     public Long getId() {
@@ -33,9 +29,7 @@ public class Currency {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     public char getSymbol() {
         return symbol;

@@ -1,22 +1,20 @@
 package com.ozyegin.cs393.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class AccountType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private double depositRate;
 
-    public AccountType(Long id, String description, double depositRate) {
-        this.id = id;
-        this.description = description;
-        this.depositRate = depositRate;
+    public AccountType() {
     }
 
     public Long getId() {
@@ -41,5 +39,13 @@ public class AccountType {
 
     public void setDepositRate(double depositRate) {
         this.depositRate = depositRate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

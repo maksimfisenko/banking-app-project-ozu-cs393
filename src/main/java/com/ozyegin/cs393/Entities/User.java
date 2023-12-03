@@ -9,22 +9,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
+    @Column(nullable = false)
     private String phoneNumber;
+    @Column(nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "owner")
     private List<Account> accounts;
 
-    public User(Long id, String firstName, String lastName, String phoneNumber, String email,
-                List<Account> accounts) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.accounts = accounts;
+    public User() {
     }
 
     public Long getId() {

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 public class DebitCard {
     @Id
-    private Long cardNumber;
+    private String cardNumber;
     @Column(nullable = false)
     private LocalDate expirationDate;
     @Column(nullable = false)
@@ -23,7 +23,7 @@ public class DebitCard {
     public DebitCard() {
     }
 
-    public void setCardNumber(long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
@@ -39,7 +39,7 @@ public class DebitCard {
         this.account = account;
     }
 
-    public Long getCardNumber() {
+    public String getCardNumber() {
         return this.cardNumber;
     }
 

@@ -1,9 +1,10 @@
 package com.ozyegin.cs393.Entities;
 
+import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
-
+@Entity
 public class Payment {
     public Payment() {
     }

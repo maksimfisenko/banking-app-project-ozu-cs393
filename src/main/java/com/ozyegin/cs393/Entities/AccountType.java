@@ -14,7 +14,11 @@ public class AccountType {
     @Column(nullable = false)
     private double depositRate;
 
-    public AccountType() {
+    public AccountType(Long id, String name, String description, double depositRate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.depositRate = depositRate;
     }
 
     public Long getId() {

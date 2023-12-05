@@ -7,6 +7,7 @@ import java.util.List;
 @Entity
 public class Account {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long number;
     @Column(nullable = false)
     private String name;
@@ -30,8 +31,20 @@ public class Account {
     @OneToMany(mappedBy = "account")
     private List<DebitCard> debitCards;
 
-
-    public Account() {
+    public Account(Long number, String name, Currency currency, AccountType type,
+                   double amount, LocalDate openingDate, User owner,
+                   List<Transaction> sentTransactions, List<Transaction> receivedTransactions,
+                   List<DebitCard> debitCards) {
+        this.number = number;
+        this.name = name;
+        this.currency = currency;
+        this.type = type;
+        this.amount = amount;
+        this.openingDate = openingDate;
+        this.owner = owner;
+        this.sentTransactions = sentTransactions;
+        this.receivedTransactions = receivedTransactions;
+        this.debitCards = debitCards;
     }
 
     public Long getNumber() {

@@ -1,16 +1,15 @@
 package com.ozyegin.cs393.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 public class DebitCard {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(nullable = false)
     private String cardNumber;
     @Column(nullable = false)
     private LocalDate expirationDate;
@@ -20,7 +19,12 @@ public class DebitCard {
     @JoinColumn(name = "accountId")
     private Account account;
 
-    public DebitCard() {
+    public DebitCard(Long id, String cardNumber, LocalDate expirationDate, String cardName, Account account) {
+        this.id = id;
+        this.cardNumber = cardNumber;
+        this.expirationDate = expirationDate;
+        this.cardName = cardName;
+        this.account = account;
     }
 
     public void setCardNumber(String cardNumber) {

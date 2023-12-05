@@ -14,7 +14,11 @@ public class Currency {
     @Column(nullable = false)
     private double exchangeRateToUsd;
 
-    public Currency() {
+    public Currency(Long id, String name, char symbol, double exchangeRateToUsd) {
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.exchangeRateToUsd = exchangeRateToUsd;
     }
 
     public Long getId() {

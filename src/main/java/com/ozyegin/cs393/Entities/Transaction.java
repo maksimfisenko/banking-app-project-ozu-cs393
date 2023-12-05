@@ -1,7 +1,6 @@
 package com.ozyegin.cs393.Entities;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +14,6 @@ public class Transaction {
     private Account sendingAccount;
     @ManyToOne
     @JoinColumn(name = "receivingAccountId")
-    @Column(nullable = false)
     private Account receivingAccount;
     @Column(nullable = false)
     private LocalDateTime timeOfTransaction;

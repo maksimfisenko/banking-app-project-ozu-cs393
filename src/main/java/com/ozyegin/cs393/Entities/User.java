@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "appUser")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +22,13 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Account> accounts;
 
-    public User() {
+    public User(Long id, String firstName, String lastName, String phoneNumber, String email, List<Account> accounts) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.accounts = accounts;
     }
 
     public Long getId() {

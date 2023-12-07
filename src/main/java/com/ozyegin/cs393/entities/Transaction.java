@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
@@ -24,6 +24,16 @@ public class Transaction {
     private double amount;
 
     public Transaction() {
+    }
+
+    public Transaction(Long id, Account sendingAccount, Account receivingAccount,
+                       LocalDateTime timeOfTransaction, Currency currency, double amount) {
+        this.id = id;
+        this.sendingAccount = sendingAccount;
+        this.receivingAccount = receivingAccount;
+        this.timeOfTransaction = timeOfTransaction;
+        this.currency = currency;
+        this.amount = amount;
     }
 
     public void setId(Long id) {

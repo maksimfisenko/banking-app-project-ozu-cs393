@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
@@ -10,49 +10,60 @@ public class DebitCard {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
-    private String cardNumber;
+    private String number;
     @Column(nullable = false)
     private LocalDate expirationDate;
     @Column(nullable = false)
-    private String cardName;
+    private String name;
     @ManyToOne
     @JoinColumn(name = "accountId")
     private Account account;
 
+    public DebitCard() {
+    }
+
     public DebitCard(Long id, String cardNumber, LocalDate expirationDate, String cardName, Account account) {
         this.id = id;
-        this.cardNumber = cardNumber;
+        this.number = cardNumber;
         this.expirationDate = expirationDate;
-        this.cardName = cardName;
+        this.name = cardName;
         this.account = account;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public void setCardName(String cardName) {
-        this.cardName = cardName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setAccount(Account account) {
         this.account = account;
     }
 
-    public String getCardNumber() {
-        return this.cardNumber;
+    public String getNumber() {
+        return this.number;
     }
 
     public LocalDate getExpirationDate() {
         return this.expirationDate;
     }
 
-    public String getCardName() {
-        return this.cardName;
+    public String getName() {
+        return this.name;
     }
 
     public Account getAccount() {

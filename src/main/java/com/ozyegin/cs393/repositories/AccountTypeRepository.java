@@ -1,6 +1,6 @@
-package com.ozyegin.cs393.Repositories;
+package com.ozyegin.cs393.repositories;
 
-import com.ozyegin.cs393.Entities.AccountType;
+import com.ozyegin.cs393.entities.AccountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
-package com.ozyegin.cs393.Repositories;
+package com.ozyegin.cs393.repositories;
 
-import com.ozyegin.cs393.Entities.Payment;
+import com.ozyegin.cs393.entities.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

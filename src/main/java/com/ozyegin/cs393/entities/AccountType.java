@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
@@ -13,6 +13,9 @@ public class AccountType {
     private String description;
     @Column(nullable = false)
     private double depositRate;
+
+    public AccountType() {
+    }
 
     public AccountType(Long id, String name, String description, double depositRate) {
         this.id = id;

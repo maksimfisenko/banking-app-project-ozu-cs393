@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +25,16 @@ public class Payment {
     public Payment() {
     }
 
+    public Payment(Long id, DebitCard sendingCard, Account receivingAccount,
+                   LocalDateTime timeOfPayment, Currency currency, double amount) {
+        this.id = id;
+        this.sendingCard = sendingCard;
+        this.receivingAccount = receivingAccount;
+        this.timeOfPayment = timeOfPayment;
+        this.currency = currency;
+        this.amount = amount;
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,7 +55,7 @@ public class Payment {
         this.timeOfPayment = timeOfTransaction;
     }
 
-    public void setCurrency(com.ozyegin.cs393.Entities.Currency currency) {
+    public void setCurrency(com.ozyegin.cs393.entities.Currency currency) {
         this.currency = currency;
     }
 

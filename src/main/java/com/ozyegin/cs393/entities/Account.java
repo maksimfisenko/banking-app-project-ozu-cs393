@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -30,6 +30,9 @@ public class Account {
     private List<Transaction> receivedTransactions;
     @OneToMany(mappedBy = "account")
     private List<DebitCard> debitCards;
+
+    public Account() {
+    }
 
     public Account(Long number, String name, Currency currency, AccountType type,
                    double amount, LocalDate openingDate, User owner,

@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
@@ -21,6 +21,9 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private List<Account> accounts;
+
+    public User() {
+    }
 
     public User(Long id, String firstName, String lastName, String phoneNumber, String email, List<Account> accounts) {
         this.id = id;

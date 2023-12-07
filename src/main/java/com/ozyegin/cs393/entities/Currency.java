@@ -1,4 +1,4 @@
-package com.ozyegin.cs393.Entities;
+package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
@@ -13,6 +13,9 @@ public class Currency {
     private char symbol;
     @Column(nullable = false)
     private double exchangeRateToUsd;
+
+    public Currency() {
+    }
 
     public Currency(Long id, String name, char symbol, double exchangeRateToUsd) {
         this.id = id;

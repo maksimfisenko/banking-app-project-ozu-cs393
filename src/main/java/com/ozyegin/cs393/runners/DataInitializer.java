@@ -1,38 +1,39 @@
-package com.ozyegin.cs393.Runners;
+package com.ozyegin.cs393.runners;
 
-import com.ozyegin.cs393.Entities.*;
-import com.ozyegin.cs393.Repositories.*;
+import com.ozyegin.cs393.entities.*;
+import com.ozyegin.cs393.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Component
+@Profile("!test")
 public class DataInitializer implements ApplicationRunner {
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
-    private CurrencyRepository currencyRepository;
+    private CurrencyService currencyService;
     @Autowired
-    private AccountTypeRepository accountTypeRepository;
+    private AccountTypeService accountTypeService;
     @Autowired
-    private DebitCardRepository debitCardRepository;
+    private DebitCardService debitCardService;
 
 
     @Override
-    public void run(ApplicationArguments args) throws Exception{
+    public void run(ApplicationArguments args) throws Exception {
         Currency currencyTest = new Currency(null, "Dollar", '$', 1);
         AccountType accountTypeTest = new AccountType(null, "Simple",
                 "Just very simple", 0);
         User userTest = new User(null, "John", "Gray",
                 "+900000", "abc@abc.com", null);
 
-        Account accountTest = new Account(null, "TestAccount",
+        Account accountTest = new Account(null, "TestAccount11111",
                 currencyTest, accountTypeTest, 1000, LocalDate.now(),
                 userTest, null, null, null);
 
@@ -48,10 +49,10 @@ public class DataInitializer implements ApplicationRunner {
         accounts.add(accountTest);
         userTest.setAccounts(accounts);
 
-        currencyRepository.save(currencyTest);
-        accountTypeRepository.save(accountTypeTest);
-        userRepository.save(userTest);
-        accountRepository.save(accountTest);
-        debitCardRepository.save(debitCardTest);
+        currencyService.createCurrency(currencyTest);
+        accountTypeService.createAccountType(accountTypeTest);
+        userService.createUser(userTest);
+        accountService.createAccount(accountTest);
+        debitCardService.createDebitCard(debitCardTest);
     }
 }

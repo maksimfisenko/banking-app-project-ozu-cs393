@@ -1,3 +1,6 @@
-# banking-app-project-ozu-cs393
+# Banking Application Backend Project
 ---
-The app works on 8081 port.
+## This is the backend application for a banking app built using Java Spring. The project is created for a CS 393 course (Ozyegin University, Fall 2023).
+## Collaborators
+- [Maksim Fisenko](https://github.com/maksimfisenko)
+- [Gleb Shkoda](https://github.com/Gosyaa)

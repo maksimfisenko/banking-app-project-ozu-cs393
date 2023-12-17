@@ -21,6 +21,11 @@ public class CurrencyService {
         return currencyRepository.findAll();
     }
 
+    public Currency getCurrencyById(Long id) {
+        return currencyRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Currency with id " + id + " not found"));
+    }
+
     public Currency updateCurrency(Currency updatedCurrency) {
 
         Long id = updatedCurrency.getId();

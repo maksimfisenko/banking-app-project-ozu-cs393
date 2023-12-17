@@ -13,12 +13,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // CRUD operations
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("User with id " + id + " not found"));
     }
 
     public User updateUser(User updatedUser) {
@@ -39,5 +46,10 @@ public class UserService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    // Backend Service 4: Delete Users With No Accounts
+    public void deleteUsersWithNoAccounts() {
+        userRepository.deleteUsersWithNoAccounts();
     }
 }

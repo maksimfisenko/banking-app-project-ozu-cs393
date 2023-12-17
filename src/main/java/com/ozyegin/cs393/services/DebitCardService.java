@@ -6,12 +6,18 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class DebitCardService {
     @Autowired
     private DebitCardRepository debitCardRepository;
+    @Autowired
+    private AccountService accountService;
+
+    // CRUD Operations
 
     public DebitCard createDebitCard(DebitCard debitCard) {
         return debitCardRepository.save(debitCard);
@@ -38,5 +44,36 @@ public class DebitCardService {
 
     public void deleteDebitCardById(Long id) {
         debitCardRepository.deleteById(id);
+    }
+
+    // Backend Service 7: Opening a New Card
+    public DebitCard openDebitCard(Long accountNumber, String cardName) {
+
+        DebitCard debitCard = new DebitCard();
+        debitCard.setNumber(generateCardNumber());
+        debitCard.setExpirationDate(LocalDate.now().plusYears(5));
+        debitCard.setName(cardName);
+        debitCard.setAccount(accountService.getAccountByNumber(accountNumber));
+
+        return debitCardRepository.save(debitCard);
+    }
+
+    // Generate Card Number
+    public String generateCardNumber() {
+        Random random = new Random();
+        StringBuilder cardNumberBuilder = new StringBuilder();
+        for (int i = 0; i < 16; i++) {
+            cardNumberBuilder.append(random.nextInt(10));
+        }
+        return cardNumberBuilder.toString();
+    }
+
+    // Generate Unique Card Number()
+    public String generateUniqueCardNumber() {
+        String cardNumber;
+        do {
+            cardNumber = generateCardNumber();
+        } while (debitCardRepository.existsByNumber(cardNumber));
+        return cardNumber;
     }
 }

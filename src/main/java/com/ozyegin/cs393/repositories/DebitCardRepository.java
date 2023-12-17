@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DebitCardRepository extends JpaRepository<DebitCard, Long> {
-    // Some queries
+    boolean existsByNumber(String cardNumber);
 }

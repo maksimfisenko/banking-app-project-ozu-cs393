@@ -1,12 +1,15 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
+import com.ozyegin.cs393.entities.Payment;
 import com.ozyegin.cs393.repositories.DebitCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +19,8 @@ public class DebitCardService {
     private DebitCardRepository debitCardRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private PaymentService paymentService;
 
     // CRUD Operations
 
@@ -50,6 +55,7 @@ public class DebitCardService {
     public DebitCard openDebitCard(Long accountNumber, String cardName) {
 
         DebitCard debitCard = new DebitCard();
+        //А здесь не generateUnique надо использовать?
         debitCard.setNumber(generateCardNumber());
         debitCard.setExpirationDate(LocalDate.now().plusYears(5));
         debitCard.setName(cardName);
@@ -76,4 +82,23 @@ public class DebitCardService {
         } while (debitCardRepository.existsByNumber(cardNumber));
         return cardNumber;
     }
+
+    //Backend Service 8: Make payment with debit card
+    public boolean makePayment(Long debitCardId, Long receivingAccountNumber, double ammount){
+        DebitCard debitCard  = debitCardRepository.findById(debitCardId).orElseThrow(() ->
+                new EntityNotFoundException("Card with id " + debitCardId + " not found"));
+        double ret = accountService.transferMoney(debitCard.getAccount().getNumber(), receivingAccountNumber, ammount);
+        if (ret == -1.0)
+            return false;
+
+        Payment curPayment = new Payment();
+        curPayment.setAmount(ammount);
+        curPayment.setCurrency(debitCard.getAccount().getCurrency());
+        curPayment.setTimeOfPayment(LocalDateTime.now());
+        curPayment.setSendingCard(debitCard);
+        curPayment.setReceivingAccount(accountService.getAccountByNumber(receivingAccountNumber));
+        paymentService.createPayment(curPayment);
+        return true;
+    }
+
 }

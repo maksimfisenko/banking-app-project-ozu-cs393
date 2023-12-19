@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -80,9 +82,16 @@ public class AccountService {
 
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
-        Currency currency = currencyService.getCurrencyById(currencyId);
+        Currency new_currency = currencyService.getCurrencyById(currencyId);
+        Currency old_currency = account.getCurrency();
+        double new_ammount = account.getAmount() * old_currency.getExchangeRateToUsd();
+        new_ammount = new_ammount / new_currency.getExchangeRateToUsd();
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.DOWN);
+        new_ammount = Double.parseDouble(df.format(new_ammount));
 
-        account.setCurrency(currency);
+        account.setCurrency(new_currency);
+        account.setAmount(new_ammount);
         return account;
     }
 }

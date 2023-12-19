@@ -2,6 +2,8 @@ package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class AccountType {
     @Id
@@ -54,5 +56,29 @@ public class AccountType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountType that = (AccountType) o;
+        return Double.compare(that.depositRate, depositRate) == 0 && Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, depositRate);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", depositRate=" + depositRate +
+                '}';
     }
 }

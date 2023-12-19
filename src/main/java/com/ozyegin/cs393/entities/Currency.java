@@ -2,6 +2,8 @@ package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Currency {
     @Id
@@ -52,5 +54,29 @@ public class Currency {
 
     public void setExchangeRateToUsd(double exchangeRatetoUsd) {
         this.exchangeRateToUsd = exchangeRatetoUsd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Currency currency = (Currency) o;
+        return symbol == currency.symbol && Double.compare(currency.exchangeRateToUsd, exchangeRateToUsd) == 0 &&
+                Objects.equals(id, currency.id) && Objects.equals(name, currency.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, symbol, exchangeRateToUsd);
+    }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", symbol=" + symbol +
+                ", exchangeRateToUsd=" + exchangeRateToUsd +
+                '}';
     }
 }

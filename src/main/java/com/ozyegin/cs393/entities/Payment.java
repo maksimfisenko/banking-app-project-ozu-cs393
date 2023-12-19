@@ -2,6 +2,7 @@ package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Payment {
@@ -83,4 +84,28 @@ public class Payment {
         return this.amount;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return Double.compare(payment.amount, amount) == 0 && Objects.equals(id, payment.id) && Objects.equals(sendingCard, payment.sendingCard) && Objects.equals(receivingAccount, payment.receivingAccount) && Objects.equals(timeOfPayment, payment.timeOfPayment) && Objects.equals(currency, payment.currency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sendingCard, receivingAccount, timeOfPayment, currency, amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", sendingCard=" + sendingCard +
+                ", receivingAccount=" + receivingAccount +
+                ", timeOfPayment=" + timeOfPayment +
+                ", currency=" + currency +
+                ", amount=" + amount +
+                '}';
+    }
 }

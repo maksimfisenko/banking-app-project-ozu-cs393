@@ -3,6 +3,7 @@ package com.ozyegin.cs393.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class DebitCard {
@@ -68,5 +69,29 @@ public class DebitCard {
 
     public Account getAccount() {
         return this.account;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DebitCard debitCard = (DebitCard) o;
+        return Objects.equals(id, debitCard.id) && Objects.equals(number, debitCard.number) && Objects.equals(expirationDate, debitCard.expirationDate) && Objects.equals(name, debitCard.name) && Objects.equals(account, debitCard.account);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, expirationDate, name, account);
+    }
+
+    @Override
+    public String toString() {
+        return "DebitCard{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", name='" + name + '\'' +
+                ", account=" + account +
+                '}';
     }
 }

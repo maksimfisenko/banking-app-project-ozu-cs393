@@ -3,6 +3,7 @@ package com.ozyegin.cs393.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Account {
@@ -128,5 +129,40 @@ public class Account {
 
     public void setDebitCards(List<DebitCard> debitCards) {
         this.debitCards = debitCards;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Double.compare(account.amount, amount) == 0 && Objects.equals(number, account.number) &&
+                Objects.equals(name, account.name) && Objects.equals(currency, account.currency) &&
+                Objects.equals(type, account.type) && Objects.equals(openingDate, account.openingDate) &&
+                Objects.equals(owner, account.owner) && Objects.equals(sentTransactions, account.sentTransactions) &&
+                Objects.equals(receivedTransactions, account.receivedTransactions) &&
+                Objects.equals(debitCards, account.debitCards);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number, name, currency, type, amount, openingDate, owner, sentTransactions,
+                receivedTransactions, debitCards);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "number=" + number +
+                ", name='" + name + '\'' +
+                ", currency=" + currency +
+                ", type=" + type +
+                ", amount=" + amount +
+                ", openingDate=" + openingDate +
+                ", owner=" + owner +
+                ", sentTransactions=" + sentTransactions +
+                ", receivedTransactions=" + receivedTransactions +
+                ", debitCards=" + debitCards +
+                '}';
     }
 }

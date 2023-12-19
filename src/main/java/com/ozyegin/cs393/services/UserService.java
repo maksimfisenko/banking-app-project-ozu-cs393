@@ -1,11 +1,14 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.entities.Account;
+import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.User;
 import com.ozyegin.cs393.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,5 +54,16 @@ public class UserService {
     // Backend Service 4: Delete Users With No Accounts
     public void deleteUsersWithNoAccounts() {
         userRepository.deleteUsersWithNoAccounts();
+    }
+
+    // Backend Service 9: Get all cards belonging to the User
+    public List<DebitCard> getAllUserDebitCards(Long id){
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("User with id " + id + " not found"));
+        List <Account> accounts = user.getAccounts();
+        List <DebitCard> debitCards = new ArrayList<DebitCard>();
+        for (Account curAccount : accounts)
+            debitCards.addAll(curAccount.getDebitCards());
+        return debitCards;
     }
 }

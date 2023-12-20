@@ -2,7 +2,6 @@ package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.entities.*;
 import com.ozyegin.cs393.repositories.AccountRepository;
-import com.ozyegin.cs393.repositories.DebitCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,16 +85,20 @@ public class AccountService {
 
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+
         Currency newCurrency = currencyService.getCurrencyById(currencyId);
         Currency oldCurrency = account.getCurrency();
-        double newAmmount = account.getAmount() * oldCurrency.getExchangeRateToUsd();
-        newAmmount = newAmmount / newCurrency.getExchangeRateToUsd();
+
+        double newAmount = account.getAmount() * oldCurrency.getExchangeRateToUsd();
+        newAmount = newAmount / newCurrency.getExchangeRateToUsd();
+
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.DOWN);
-        newAmmount = Double.parseDouble(df.format(newAmmount));
+        newAmount = Double.parseDouble(df.format(newAmount));
 
         account.setCurrency(newCurrency);
-        account.setAmount(newAmmount);
+        account.setAmount(newAmount);
+
         return account;
     }
 
@@ -104,46 +107,57 @@ public class AccountService {
 
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+
         if (account.getAmount() != 0)
             return false;
-        List<DebitCard> debitCards= account.getDebitCards();
+
+        List<DebitCard> debitCards = account.getDebitCards();
+
         for (DebitCard curDebitCard : debitCards){
             debitCardService.deleteDebitCardById(curDebitCard.getId());
         }
+
         accountRepository.deleteById(accountNumber);
+
         return true;
     }
 
     // Backend Service 5: Transfer Money Between 2 Accounts
-    public double transferMoney (Long sendingAccountNumber, Long receivingAccountNumber, double ammount){
+    public double transferMoney (Long sendingAccountNumber, Long receivingAccountNumber, double amount){
 
         Account sendingAccount = accountRepository.findById(sendingAccountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + sendingAccountNumber + " not found"));
         Account receivingAccount = accountRepository.findById(receivingAccountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + receivingAccountNumber + " not found"));
-        if (sendingAccount.getAmount() < ammount)
+
+        if (sendingAccount.getAmount() < amount)
             return -1.0;
-        sendingAccount.setAmount(sendingAccount.getAmount() - ammount);
-        double amountUSED = ammount * sendingAccount.getCurrency().getExchangeRateToUsd();
+
+        sendingAccount.setAmount(sendingAccount.getAmount() - amount);
+
+        double amountUSED = amount * sendingAccount.getCurrency().getExchangeRateToUsd();
         double amountReceiving = amountUSED / receivingAccount.getCurrency().getExchangeRateToUsd();
+
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.DOWN);
+
         amountReceiving = Double.parseDouble(df.format(amountReceiving));
         receivingAccount.setAmount(receivingAccount.getAmount() + amountReceiving);
 
-        Transaction curTransaction = new Transaction();
-        curTransaction.setAmount(ammount);
-        curTransaction.setCurrency(sendingAccount.getCurrency());
-        curTransaction.setSendingAccount(sendingAccount);
-        curTransaction.setReceivingAccount(sendingAccount);
-        curTransaction.setTimeOfTransaction(LocalDateTime.now());
-        transactionService.createTransaction(curTransaction);
+        Transaction currentTransaction = new Transaction();
+        currentTransaction.setAmount(amount);
+        currentTransaction.setCurrency(sendingAccount.getCurrency());
+        currentTransaction.setSendingAccount(sendingAccount);
+        currentTransaction.setReceivingAccount(sendingAccount);
+        currentTransaction.setTimeOfTransaction(LocalDateTime.now());
+
+        transactionService.createTransaction(currentTransaction);
 
         return sendingAccount.getAmount();
     }
 
     // Backend Service 6: Get the amount on the account on selected date
-    public double amountOnSelectedDate (Long accountNumber, LocalDate date) throws Exception{
+    public double getAmountOnSelectedDate(Long accountNumber, LocalDate date) throws Exception{
 
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
@@ -155,21 +169,25 @@ public class AccountService {
             throw new Exception("The date " + date.toString() + " is in the future");
         }
 
-        double curAmount = account.getAmount();
-        List <Transaction> sending = transactionService.getSendingTransactionsOfAccount(account);
-        for (Transaction curTransaction : sending){
+        double currentAmount = account.getAmount();
+
+        List <Transaction> sentTransactions =
+                transactionService.getSendingTransactionsOfAccount(account);
+        for (Transaction curTransaction : sentTransactions){
             if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay()))
-                curAmount -= curTransaction.getAmount();
+                currentAmount -= curTransaction.getAmount();
         }
-        List <Transaction> receiving = transactionService.getReceivingTransactionsOfAccount(account);
-        for (Transaction curTransaction : receiving){
+
+        List <Transaction> receivedTransactions = transactionService.getReceivingTransactionsOfAccount(account);
+        for (Transaction curTransaction : receivedTransactions){
             if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay())) {
-                curAmount = curAmount * curTransaction.getCurrency().getExchangeRateToUsd();
-                curAmount = curAmount / account.getCurrency().getExchangeRateToUsd();
-                curAmount += curTransaction.getAmount();
+                currentAmount = currentAmount * curTransaction.getCurrency().getExchangeRateToUsd();
+                currentAmount = currentAmount / account.getCurrency().getExchangeRateToUsd();
+                currentAmount += curTransaction.getAmount();
             }
         }
-        return curAmount;
+
+        return currentAmount;
     }
 
 }

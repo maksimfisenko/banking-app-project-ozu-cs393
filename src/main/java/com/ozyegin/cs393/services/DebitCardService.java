@@ -56,8 +56,7 @@ public class DebitCardService {
     public DebitCard openDebitCard(Long accountNumber, String cardName) {
 
         DebitCard debitCard = new DebitCard();
-        //А здесь не generateUnique надо использовать?
-        debitCard.setNumber(generateCardNumber());
+        debitCard.setNumber(generateUniqueCardNumber());
         debitCard.setExpirationDate(LocalDate.now().plusYears(5));
         debitCard.setName(cardName);
         debitCard.setAccount(accountService.getAccountByNumber(accountNumber));
@@ -75,7 +74,7 @@ public class DebitCardService {
         return cardNumberBuilder.toString();
     }
 
-    // Generate Unique Card Number()
+    // Generate Unique Card Number
     public String generateUniqueCardNumber() {
         String cardNumber;
         do {
@@ -84,25 +83,29 @@ public class DebitCardService {
         return cardNumber;
     }
 
-    //Backend Service 8: Make payment with debit card
-    public boolean makePayment(Long debitCardId, Long receivingAccountNumber, double ammount){
+    // Backend Service 8: Make payment with debit card
+    public boolean makePayment(Long debitCardId, Long receivingAccountNumber, double amount){
+
         DebitCard debitCard  = debitCardRepository.findById(debitCardId).orElseThrow(() ->
                 new EntityNotFoundException("Card with id " + debitCardId + " not found"));
-        double ret = accountService.transferMoney(debitCard.getAccount().getNumber(), receivingAccountNumber, ammount);
+
+        double ret = accountService.transferMoney(debitCard.getAccount().getNumber(), receivingAccountNumber, amount);
+
         if (ret == -1.0)
             return false;
 
         Payment curPayment = new Payment();
-        curPayment.setAmount(ammount);
+        curPayment.setAmount(amount);
         curPayment.setCurrency(debitCard.getAccount().getCurrency());
         curPayment.setTimeOfPayment(LocalDateTime.now());
         curPayment.setSendingCard(debitCard);
         curPayment.setReceivingAccount(accountService.getAccountByNumber(receivingAccountNumber));
         paymentService.createPayment(curPayment);
+
         return true;
     }
 
-    //Backend Service 10: Get all payments within specified dates
+    // Backend Service 10: Get all payments within specified dates
     public List <Payment> getPaymentsByDates(Long debitCardId, LocalDate start, LocalDate end) throws Exception {
 
         if (start.isBefore(end))

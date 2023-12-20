@@ -1,5 +1,6 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.Transaction;
 import com.ozyegin.cs393.repositories.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,5 +40,12 @@ public class TransactionService {
 
     public void deleteTransactionById(Long id) {
         transactionRepository.deleteById(id);
+    }
+
+    public List<Transaction> getSendingTransactionsOfAccount(Account account){
+        return transactionRepository.findBySendingAccount(account);
+    }
+    public List<Transaction> getReceivingTransactionsOfAccount(Account account){
+        return transactionRepository.findByReceivingAccount(account);
     }
 }

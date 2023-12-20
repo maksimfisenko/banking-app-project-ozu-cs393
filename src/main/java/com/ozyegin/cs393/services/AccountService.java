@@ -141,4 +141,35 @@ public class AccountService {
 
         return sendingAccount.getAmount();
     }
+
+    // Backend Service 6: Get the amount on the account on selected date
+    public double amountOnSelectedDate (Long accountNumber, LocalDate date) throws Exception{
+
+        Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
+                new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+
+        if (date.isBefore(account.getOpeningDate())){
+            throw new Exception("Account did not exist on " + date.toString());
+        }
+        if (date.isAfter(LocalDate.now())){
+            throw new Exception("The date " + date.toString() + " is in the future");
+        }
+
+        double curAmount = account.getAmount();
+        List <Transaction> sending = transactionService.getSendingTransactionsOfAccount(account);
+        for (Transaction curTransaction : sending){
+            if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay()))
+                curAmount -= curTransaction.getAmount();
+        }
+        List <Transaction> receiving = transactionService.getReceivingTransactionsOfAccount(account);
+        for (Transaction curTransaction : receiving){
+            if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay())) {
+                curAmount = curAmount * curTransaction.getCurrency().getExchangeRateToUsd();
+                curAmount = curAmount / account.getCurrency().getExchangeRateToUsd();
+                curAmount += curTransaction.getAmount();
+            }
+        }
+        return curAmount;
+    }
+
 }

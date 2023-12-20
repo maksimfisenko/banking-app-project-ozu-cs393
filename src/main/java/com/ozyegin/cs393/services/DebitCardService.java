@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -99,6 +100,27 @@ public class DebitCardService {
         curPayment.setReceivingAccount(accountService.getAccountByNumber(receivingAccountNumber));
         paymentService.createPayment(curPayment);
         return true;
+    }
+
+    //Backend Service 10: Get all payments within specified dates
+    public List <Payment> getPaymentsByDates(Long debitCardId, LocalDate start, LocalDate end) throws Exception {
+
+        if (start.isBefore(end))
+            throw new Exception("Dates are incorrect");
+        if (end.isAfter(LocalDate.now()))
+            throw new Exception("The date " + end.toString() + " is in the future");
+
+        List <Payment> result = new ArrayList<Payment>();
+        DebitCard sendingCard = debitCardRepository.findById(debitCardId).orElseThrow(() ->
+                new EntityNotFoundException("Card with id " + debitCardId + " not found"));
+
+        List<Payment> payments = paymentService.getPaymentsBySendingCard(sendingCard);
+        for (Payment curPayment : payments){
+            if (curPayment.getTimeOfPayment().isAfter(start.atStartOfDay()) &&
+            curPayment.getTimeOfPayment().isBefore(end.atTime(23, 59)))
+                result.add(curPayment);
+        }
+        return result;
     }
 
 }

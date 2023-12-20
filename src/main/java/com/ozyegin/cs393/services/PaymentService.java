@@ -1,5 +1,6 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.Payment;
 import com.ozyegin.cs393.repositories.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,5 +40,8 @@ public class PaymentService {
 
     public void deletePaymentById(Long id) {
         paymentRepository.deleteById(id);
+    }
+    public List<Payment> getPaymentsBySendingCard(DebitCard sendingCard){
+        return paymentRepository.findBySendingCard(sendingCard);
     }
 }

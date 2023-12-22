@@ -1,16 +1,18 @@
 package com.ozyegin.cs393.dto;
 
+import com.ozyegin.cs393.entities.AccountType;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class AccountDTO {
     private Long number;
     private String name;
-    private Long currencyId;
-    private Long accountTypeId;
+    private CurrencyDTO currency;
+    private AccountTypeDTO accountType;
     private double amount;
     private LocalDate openingDate;
-    private Long ownerId;
+    private UserDTO owner;
 
     public AccountDTO() {
     }
@@ -31,20 +33,18 @@ public class AccountDTO {
         this.name = name;
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public CurrencyDTO getCurrency() {
+    return currency;
+}
+
+    public void setCurrency(CurrencyDTO currency) { this.currency = currency; }
+
+    public AccountTypeDTO getAccountType() {
+        return accountType;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
-    }
-
-    public Long getAccountTypeId() {
-        return accountTypeId;
-    }
-
-    public void setAccountTypeId(Long accountTypeId) {
-        this.accountTypeId = accountTypeId;
+    public void setAccountType(AccountTypeDTO accountType) {
+        this.accountType = accountType;
     }
 
     public double getAmount() {
@@ -63,12 +63,12 @@ public class AccountDTO {
         this.openingDate = openingDate;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public UserDTO getOwner() {
+        return owner;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(UserDTO owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -76,12 +76,12 @@ public class AccountDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountDTO that = (AccountDTO) o;
-        return Double.compare(that.amount, amount) == 0 && Objects.equals(number, that.number) && Objects.equals(name, that.name) && Objects.equals(currencyId, that.currencyId) && Objects.equals(accountTypeId, that.accountTypeId) && Objects.equals(openingDate, that.openingDate) && Objects.equals(ownerId, that.ownerId);
+        return Double.compare(that.amount, amount) == 0 && Objects.equals(number, that.number) && Objects.equals(name, that.name) && Objects.equals(currency, that.currency) && Objects.equals(accountType, that.accountType) && Objects.equals(openingDate, that.openingDate) && Objects.equals(owner, that.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, name, currencyId, accountTypeId, amount, openingDate, ownerId);
+        return Objects.hash(number, name, currency, accountType, amount, openingDate, owner);
     }
 
     @Override
@@ -89,11 +89,11 @@ public class AccountDTO {
         return "AccountDTO{" +
                 "number=" + number +
                 ", name='" + name + '\'' +
-                ", currencyId=" + currencyId +
-                ", accountTypeId=" + accountTypeId +
+                ", currencyId=" + currency +
+                ", accountTypeId=" + accountType +
                 ", amount=" + amount +
                 ", openingDate=" + openingDate +
-                ", ownerId=" + ownerId +
+                ", ownerId=" + owner +
                 '}';
     }
 }

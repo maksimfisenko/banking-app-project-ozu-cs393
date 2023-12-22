@@ -13,8 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.*;
-import java.text.DecimalFormat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,8 +27,6 @@ public class AccountService {
     @Autowired
     private CurrencyService currencyService;
     @Autowired
-    private DebitCardService debitCardService;
-    @Autowired
     private TransactionService transactionService;
     @Autowired
     private AccountMapper accountMapper;
@@ -42,6 +39,7 @@ public class AccountService {
 
     // CRUD Operations
 
+    // CRUD & Backend Service 1: Opening a New Account
     public AccountDTO createAccount(AccountDTO accountDTO) {
         Account account = accountMapper.accountDtoToAccount(accountDTO);
         account = accountRepository.save(account);
@@ -53,10 +51,6 @@ public class AccountService {
         return accountMapper.accountsToAccountDtos(accounts);
     }
 
-    /*public AccountDTO getAccountByNumber(AccountDTO accountDTO) {
-        Account account = accountMapper.accountDtoToAccount(accountDTO);
-        return accountMapper.accountToAccountDto(account);
-    }*/
 
     public AccountDTO getAccountByNumber(Long accountNumber) {
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
@@ -70,8 +64,7 @@ public class AccountService {
         return accountMapper.accountToAccountDto(account);
     }
 
-    public void deleteAccountById(AccountDTO accountDTO) {
-        Long accountNumber = accountDTO.getNumber();
+    public void deleteAccountByNumber(Long accountNumber) {
         accountRepository.deleteById(accountNumber);
     }
 
@@ -79,12 +72,6 @@ public class AccountService {
         accountRepository.deleteAll();
     }
 
-    // Backend Service 1: Opening a New Account
-    public AccountDTO openAccount(AccountDTO accountDTO) {
-        Account account = accountMapper.accountDtoToAccount(accountDTO);
-        account = accountRepository.save(account);
-        return accountMapper.accountToAccountDto(account);
-    }
 
     // Backend Service 2: Changing Account Currency
     public AccountDTO changeCurrency(AccountDTO accountDTO, CurrencyDTO currencyDTO) {
@@ -104,7 +91,7 @@ public class AccountService {
         return accountMapper.accountToAccountDto(account);
     }
 
-    // Backend Service 3: Close an existing Account
+    // Backend Service 3: Close an Existing Account
     public boolean closeAccount(AccountDTO accountDTO){
 
         Account account = accountMapper.accountDtoToAccount(accountDTO);
@@ -112,11 +99,11 @@ public class AccountService {
         if (account.getAmount() != 0)
             return false;
 
-        List<DebitCard> debitCards = account.getDebitCards();
-
-        for (DebitCard curDebitCard : debitCards){
-            debitCardService.deleteDebitCardById(debitCardMapper.debitCardtoDebitCardDto(curDebitCard));
-        }
+//        List<DebitCard> debitCards = account.getDebitCards();
+//
+//        for (DebitCard curDebitCard : debitCards){
+//            debitCardService.deleteDebitCardById(debitCardMapper.debitCardToDebitCardDto(curDebitCard));
+//        }
 
         accountRepository.deleteById(account.getNumber());
 
@@ -134,8 +121,8 @@ public class AccountService {
 
         sendingAccount.setAmount(sendingAccount.getAmount() - amount);
 
-        double amountUSED = amount * sendingAccount.getCurrency().getExchangeRateToUsd();
-        double amountReceiving = amountUSED / receivingAccount.getCurrency().getExchangeRateToUsd();
+        double amountUsed = amount * sendingAccount.getCurrency().getExchangeRateToUsd();
+        double amountReceiving = amountUsed / receivingAccount.getCurrency().getExchangeRateToUsd();
 
         amountReceiving = Math.round(amountReceiving * 100.0) / 100.0;
         receivingAccount.setAmount(receivingAccount.getAmount() + amountReceiving);
@@ -149,19 +136,19 @@ public class AccountService {
 
         transactionService.createTransaction(transactionMapper.transactionToTransactionDto(currentTransaction));
 
-        return sendingAccount.getAmount();
+        return amount;
     }
 
     // Backend Service 6: Get the amount on the account on selected date
-    public double getAmountOnSelectedDate(AccountDTO accountDTO, LocalDate date) throws Exception{
+    public double getAmountOnSelectedDate(AccountDTO accountDTO, LocalDate date) throws DateTimeException{
 
         Account account = accountMapper.accountDtoToAccount(accountDTO);
 
         if (date.isBefore(account.getOpeningDate())){
-            throw new Exception("Account did not exist on " + date);
+            throw new DateTimeException("Account did not exist on " + date);
         }
         if (date.isAfter(LocalDate.now())){
-            throw new Exception("The date " + date + " is in the future");
+            throw new DateTimeException("The date " + date + " is in the future");
         }
 
         double currentAmount = account.getAmount();

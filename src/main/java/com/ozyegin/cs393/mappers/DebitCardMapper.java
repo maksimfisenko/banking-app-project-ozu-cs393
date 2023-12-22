@@ -7,11 +7,12 @@ import com.ozyegin.cs393.entities.DebitCard;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DebitCardMapper {
 
     DebitCardMapper INSTANCE = Mappers.getMapper(DebitCardMapper.class);

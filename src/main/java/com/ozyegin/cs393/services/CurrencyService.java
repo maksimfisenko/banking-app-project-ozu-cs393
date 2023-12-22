@@ -26,17 +26,25 @@ public class CurrencyService {
         return currencyMapper.currencyToCurrencyDto(currency);
     }
 
-    public List<Currency> getAllCurrencies() {
-        return currencyRepository.findAll();
+    public List<CurrencyDTO> getAllCurrencies() {
+        List<Currency> currencies = currencyRepository.findAll();
+        return currencyMapper.currenciesToCurrencyDtos(currencies);
     }
 
-    public Currency getCurrencyById(Long id) {
-        return currencyRepository.findById(id).orElseThrow(() ->
+    /*public CurrencyDTO getCurrencyById(CurrencyDTO currencyDTO) {
+        Currency currency = currencyMapper.currencyDtoToCurrency(currencyDTO);
+        return currencyMapper.currencyToCurrencyDto(currency);
+    }*/
+
+    public CurrencyDTO getCurrencyById(Long id) {
+        Currency currency = currencyRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Currency with id " + id + " not found"));
+        return currencyMapper.currencyToCurrencyDto(currency);
     }
 
-    public Currency updateCurrency(Currency updatedCurrency) {
+    public CurrencyDTO updateCurrency(CurrencyDTO updatedCurrencyDto) {
 
+        Currency updatedCurrency = currencyMapper.currencyDtoToCurrency(updatedCurrencyDto);
         Long id = updatedCurrency.getId();
 
         Currency currency = currencyRepository.findById(id).orElseThrow(() ->
@@ -45,11 +53,12 @@ public class CurrencyService {
         currency.setName(updatedCurrency.getName());
         currency.setSymbol(updatedCurrency.getSymbol());
         currency.setExchangeRateToUsd(updatedCurrency.getExchangeRateToUsd());
-
-        return currencyRepository.save(updatedCurrency);
+        currency = currencyRepository.save(currency);
+        return currencyMapper.currencyToCurrencyDto(currency);
     }
 
-    public void deleteCurrencyById(Long id) {
-        currencyRepository.deleteById(id);
+    public void deleteCurrencyById(CurrencyDTO currencyDTO) {
+        Currency currency = currencyMapper.currencyDtoToCurrency(currencyDTO);
+        currencyRepository.deleteById(currency.getId());
     }
 }

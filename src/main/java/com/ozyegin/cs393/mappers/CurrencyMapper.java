@@ -1,9 +1,14 @@
 package com.ozyegin.cs393.mappers;
 
+import com.ozyegin.cs393.dto.AccountTypeDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.entities.AccountType;
 import com.ozyegin.cs393.entities.Currency;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper
 public interface CurrencyMapper {
@@ -12,4 +17,7 @@ public interface CurrencyMapper {
     CurrencyDTO currencyToCurrencyDto(Currency currency);
 
     Currency currencyDtoToCurrency(CurrencyDTO currencyDto);
+    default List<CurrencyDTO> currenciesToCurrencyDtos (List<Currency> currencies){
+        return currencies.stream().map(this::currencyToCurrencyDto).collect(Collectors.toList());
+    }
 }

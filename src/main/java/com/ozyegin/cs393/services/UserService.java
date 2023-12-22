@@ -28,8 +28,9 @@ public class UserService {
         return userMapper.userToUserDto(user);
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> findAllUsers() {
+        List <User> users = userRepository.findAll();
+        return userMapper.UsersToUserDtos(users);
     }
 
     public User getUserById(Long id) {
@@ -37,8 +38,8 @@ public class UserService {
                 new EntityNotFoundException("User with id " + id + " not found"));
     }
 
-    public User updateUser(User updatedUser) {
-
+    public UserDTO updateUser(UserDTO updatedUserDto) {
+        User updatedUser = userMapper.userDtoToUser(updatedUserDto);
         Long id = updatedUser.getId();
 
         User user = userRepository.findById(id).orElseThrow(() ->
@@ -49,8 +50,8 @@ public class UserService {
         user.setPhoneNumber(updatedUser.getPhoneNumber());
         user.setEmail(updatedUser.getEmail());
         user.setAccounts(updatedUser.getAccounts());
-
-        return userRepository.save(updatedUser);
+        user = userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 
     public void deleteUserById(Long id) {

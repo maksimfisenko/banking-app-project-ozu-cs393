@@ -1,8 +1,10 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.Transaction;
+import com.ozyegin.cs393.mappers.AccountMapper;
 import com.ozyegin.cs393.mappers.TransactionMapper;
 import com.ozyegin.cs393.repositories.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +19,8 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private TransactionMapper transactionMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     // CRUD Operations
 
@@ -26,12 +30,13 @@ public class TransactionService {
         return transactionMapper.transactionToTransactionDto(transaction);
     }
 
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+    public List<TransactionDTO> getAllTransactions() {
+        List <Transaction> transactions = transactionRepository.findAll();
+        return transactionMapper.TransactionsToTransactionDtos(transactions);
     }
 
-    public Transaction updateTransaction(Transaction updatedTransaction) {
-
+    public TransactionDTO updateTransaction(TransactionDTO updatedTransactionDTO) {
+        Transaction updatedTransaction = transactionMapper.transactionDtoToTransaction(updatedTransactionDTO);
         Long id = updatedTransaction.getId();
 
         Transaction transaction = transactionRepository.findById(id).orElseThrow(() ->
@@ -42,18 +47,22 @@ public class TransactionService {
         transaction.setTimeOfTransaction(updatedTransaction.getTimeOfTransaction());
         transaction.setCurrency(updatedTransaction.getCurrency());
         transaction.setAmount(updatedTransaction.getAmount());
-
-        return transactionRepository.save(updatedTransaction);
+        transaction = transactionRepository.save(updatedTransaction);
+        return transactionMapper.transactionToTransactionDto(transaction);
     }
 
     public void deleteTransactionById(Long id) {
         transactionRepository.deleteById(id);
     }
 
-    public List<Transaction> getSendingTransactionsOfAccount(Account account){
-        return transactionRepository.findBySendingAccount(account);
+    public List<TransactionDTO> getSendingTransactionsOfAccount(AccountDTO accountDTO){
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
+        List<Transaction> transactions = transactionRepository.findBySendingAccount(account);
+        return transactionMapper.TransactionsToTransactionDtos(transactions);
     }
-    public List<Transaction> getReceivingTransactionsOfAccount(Account account){
-        return transactionRepository.findByReceivingAccount(account);
+    public List<TransactionDTO> getReceivingTransactionsOfAccount(AccountDTO accountDTO){
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
+        List<Transaction> transactions = transactionRepository.findByReceivingAccount(account);
+        return transactionMapper.TransactionsToTransactionDtos(transactions);
     }
 }

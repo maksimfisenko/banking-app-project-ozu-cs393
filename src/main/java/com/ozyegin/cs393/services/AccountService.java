@@ -1,8 +1,12 @@
 package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
+import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.*;
 import com.ozyegin.cs393.mappers.AccountMapper;
+import com.ozyegin.cs393.mappers.CurrencyMapper;
+import com.ozyegin.cs393.mappers.DebitCardMapper;
 import com.ozyegin.cs393.mappers.TransactionMapper;
 import com.ozyegin.cs393.repositories.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,6 +35,10 @@ public class AccountService {
     private AccountMapper accountMapper;
     @Autowired
     private TransactionMapper transactionMapper;
+    @Autowired
+    private CurrencyMapper currencyMapper;
+    @Autowired
+    private DebitCardMapper debitCardMapper;
 
     // CRUD Operations
 
@@ -44,6 +52,11 @@ public class AccountService {
         List<Account> accounts = accountRepository.findAll();
         return accountMapper.accountsToAccountDtos(accounts);
     }
+
+    /*public AccountDTO getAccountByNumber(AccountDTO accountDTO) {
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
+        return accountMapper.accountToAccountDto(account);
+    }*/
 
     public AccountDTO getAccountByNumber(Long accountNumber) {
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
@@ -74,21 +87,16 @@ public class AccountService {
     }
 
     // Backend Service 2: Changing Account Currency
-    public AccountDTO changeCurrency(Long accountNumber, Long currencyId) {
+    public AccountDTO changeCurrency(AccountDTO accountDTO, CurrencyDTO currencyDTO) {
 
-        Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
 
-        Currency newCurrency = currencyService.getCurrencyById(currencyId);
+        Currency newCurrency = currencyMapper.currencyDtoToCurrency(currencyDTO);
         Currency oldCurrency = account.getCurrency();
 
         double newAmount = account.getAmount() * oldCurrency.getExchangeRateToUsd();
         newAmount = newAmount / newCurrency.getExchangeRateToUsd();
-
-        DecimalFormat df = new DecimalFormat("#.##");
-        // fix rounding
-        df.setRoundingMode(RoundingMode.DOWN);
-        newAmount = Double.parseDouble(df.format(newAmount));
+        newAmount = Math.round(newAmount * 100.0) / 100.0;
 
         account.setCurrency(newCurrency);
         account.setAmount(newAmount);
@@ -97,10 +105,9 @@ public class AccountService {
     }
 
     // Backend Service 3: Close an existing Account
-    public boolean closeAccount(Long accountNumber){
+    public boolean closeAccount(AccountDTO accountDTO){
 
-        Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
 
         if (account.getAmount() != 0)
             return false;
@@ -108,21 +115,19 @@ public class AccountService {
         List<DebitCard> debitCards = account.getDebitCards();
 
         for (DebitCard curDebitCard : debitCards){
-            debitCardService.deleteDebitCardById(curDebitCard.getId());
+            debitCardService.deleteDebitCardById(debitCardMapper.debitCardtoDebitCardDto(curDebitCard));
         }
 
-        accountRepository.deleteById(accountNumber);
+        accountRepository.deleteById(account.getNumber());
 
         return true;
     }
 
     // Backend Service 5: Transfer Money Between 2 Accounts
-    public double transferMoney (Long sendingAccountNumber, Long receivingAccountNumber, double amount){
+    public double transferMoney (AccountDTO sendingAccountDTO, AccountDTO receivingAccountDTO, double amount){
 
-        Account sendingAccount = accountRepository.findById(sendingAccountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + sendingAccountNumber + " not found"));
-        Account receivingAccount = accountRepository.findById(receivingAccountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + receivingAccountNumber + " not found"));
+        Account sendingAccount = accountMapper.accountDtoToAccount(sendingAccountDTO);
+        Account receivingAccount = accountMapper.accountDtoToAccount(receivingAccountDTO);
 
         if (sendingAccount.getAmount() < amount)
             return -1.0;
@@ -132,11 +137,7 @@ public class AccountService {
         double amountUSED = amount * sendingAccount.getCurrency().getExchangeRateToUsd();
         double amountReceiving = amountUSED / receivingAccount.getCurrency().getExchangeRateToUsd();
 
-        DecimalFormat df = new DecimalFormat("#.##");
-        // fix rounding
-        df.setRoundingMode(RoundingMode.DOWN);
-
-        amountReceiving = Double.parseDouble(df.format(amountReceiving));
+        amountReceiving = Math.round(amountReceiving * 100.0) / 100.0;
         receivingAccount.setAmount(receivingAccount.getAmount() + amountReceiving);
 
         Transaction currentTransaction = new Transaction();
@@ -152,10 +153,9 @@ public class AccountService {
     }
 
     // Backend Service 6: Get the amount on the account on selected date
-    public double getAmountOnSelectedDate(Long accountNumber, LocalDate date) throws Exception{
+    public double getAmountOnSelectedDate(AccountDTO accountDTO, LocalDate date) throws Exception{
 
-        Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + accountNumber + " not found"));
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
 
         if (date.isBefore(account.getOpeningDate())){
             throw new Exception("Account did not exist on " + date);
@@ -166,17 +166,19 @@ public class AccountService {
 
         double currentAmount = account.getAmount();
 
-        List <Transaction> sentTransactions =
-                transactionService.getSendingTransactionsOfAccount(account);
-        for (Transaction curTransaction : sentTransactions){
+        List <TransactionDTO> sentTransactions =
+                transactionService.getSendingTransactionsOfAccount(accountMapper.accountToAccountDto(account));
+        for (TransactionDTO curTransaction : sentTransactions){
             if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay()))
                 currentAmount -= curTransaction.getAmount();
         }
 
-        List <Transaction> receivedTransactions = transactionService.getReceivingTransactionsOfAccount(account);
-        for (Transaction curTransaction : receivedTransactions){
+        List <TransactionDTO> receivedTransactions = transactionService.getReceivingTransactionsOfAccount(
+                accountMapper.accountToAccountDto(account));
+        for (TransactionDTO curTransaction : receivedTransactions){
+            CurrencyDTO currency = currencyService.getCurrencyById(curTransaction.getCurrencyId());
             if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay())) {
-                currentAmount = currentAmount * curTransaction.getCurrency().getExchangeRateToUsd();
+                currentAmount = currentAmount * currency.getExchangeRateToUsd();
                 currentAmount = currentAmount / account.getCurrency().getExchangeRateToUsd();
                 currentAmount += curTransaction.getAmount();
             }

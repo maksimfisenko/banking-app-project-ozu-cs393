@@ -2,6 +2,7 @@ package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.DebitCardDTO;
+import com.ozyegin.cs393.dto.PaymentDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.Payment;
@@ -42,12 +43,14 @@ public class DebitCardService {
         return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
-    public List<DebitCard> getAllDebitCards() {
-        return debitCardRepository.findAll();
+    public List<DebitCardDTO> getAllDebitCards() {
+        List<DebitCard> debitCards = debitCardRepository.findAll();
+        return debitCardMapper.debutCardsToDebitCardDtos(debitCards);
     }
 
-    public DebitCard updateDebitCard(DebitCard updatedDebitCard) {
+    public DebitCardDTO updateDebitCard(DebitCardDTO updatedDebitCardDTO) {
 
+        DebitCard updatedDebitCard = debitCardMapper.debitCardDtoToDebitCard(updatedDebitCardDTO);
         Long id = updatedDebitCard.getId();
 
         DebitCard debitCard = debitCardRepository.findById(id).orElseThrow(() ->
@@ -57,16 +60,17 @@ public class DebitCardService {
         debitCard.setAccount(updatedDebitCard.getAccount());
         debitCard.setNumber(updatedDebitCard.getNumber());
         debitCard.setExpirationDate(updatedDebitCard.getExpirationDate());
-
-        return debitCardRepository.save(updatedDebitCard);
+        debitCard = debitCardRepository.save(debitCard);
+        return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
-    public void deleteDebitCardById(Long id) {
-        debitCardRepository.deleteById(id);
+    public void deleteDebitCardById(DebitCardDTO debitCardDTO) {
+        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
+        debitCardRepository.deleteById(debitCard.getId());
     }
 
     // Backend Service 7: Opening a New Card
-    public DebitCard openDebitCard(Long accountNumber, String cardName) {
+    public DebitCardDTO openDebitCard(Long accountNumber, String cardName) {
 
         DebitCard debitCard = new DebitCard();
         debitCard.setNumber(generateUniqueCardNumber());
@@ -75,8 +79,8 @@ public class DebitCardService {
 
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
         debitCard.setAccount(accountMapper.accountDtoToAccount(accountDTO));
-
-        return debitCardRepository.save(debitCard);
+        debitCard = debitCardRepository.save(debitCard);
+        return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
     // Generate Card Number
@@ -99,12 +103,12 @@ public class DebitCardService {
     }
 
     // Backend Service 8: Make payment with debit card
-    public boolean makePayment(Long debitCardId, Long receivingAccountNumber, double amount){
+    public boolean makePayment(DebitCardDTO debitCardDTO, AccountDTO receivingAccountDTO, double amount){
 
-        DebitCard debitCard  = debitCardRepository.findById(debitCardId).orElseThrow(() ->
-                new EntityNotFoundException("Card with id " + debitCardId + " not found"));
+        DebitCard debitCard  = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
 
-        double ret = accountService.transferMoney(debitCard.getAccount().getNumber(), receivingAccountNumber, amount);
+        double ret = accountService.transferMoney(accountMapper.accountToAccountDto(debitCard.getAccount()),
+                receivingAccountDTO, amount);
 
         if (ret == -1.0)
             return false;
@@ -115,7 +119,7 @@ public class DebitCardService {
         curPayment.setTimeOfPayment(LocalDateTime.now());
         curPayment.setSendingCard(debitCard);
 
-        AccountDTO accountDTO = accountService.getAccountByNumber(receivingAccountNumber);
+        AccountDTO accountDTO = accountService.getAccountByNumber(receivingAccountDTO.getNumber());
         curPayment.setReceivingAccount(accountMapper.accountDtoToAccount(accountDTO));
         paymentService.createPayment(paymentMapper.paymentToPaymentDto(curPayment));
 
@@ -123,19 +127,21 @@ public class DebitCardService {
     }
 
     // Backend Service 10: Get all payments within specified dates
-    public List <Payment> getPaymentsByDates(Long debitCardId, LocalDate start, LocalDate end) throws Exception {
+    public List <PaymentDTO> getPaymentsByDates(DebitCardDTO debitCardDTO, LocalDate start, LocalDate end) throws Exception {
 
+        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
         if (start.isBefore(end))
             throw new Exception("Dates are incorrect");
         if (end.isAfter(LocalDate.now()))
             throw new Exception("The date " + end.toString() + " is in the future");
 
-        List <Payment> result = new ArrayList<Payment>();
-        DebitCard sendingCard = debitCardRepository.findById(debitCardId).orElseThrow(() ->
-                new EntityNotFoundException("Card with id " + debitCardId + " not found"));
+        List <PaymentDTO> result = new ArrayList<PaymentDTO>();
+        DebitCard sendingCard = debitCardRepository.findById(debitCard.getId()).orElseThrow(() ->
+                new EntityNotFoundException("Card with id " + debitCard.getId() + " not found"));
 
-        List<Payment> payments = paymentService.getPaymentsBySendingCard(sendingCard);
-        for (Payment curPayment : payments){
+        List<PaymentDTO> payments = paymentService.getPaymentsBySendingCard(
+                debitCardMapper.debitCardtoDebitCardDto(sendingCard));
+        for (PaymentDTO curPayment : payments){
             if (curPayment.getTimeOfPayment().isAfter(start.atStartOfDay()) &&
             curPayment.getTimeOfPayment().isBefore(end.atTime(23, 59)))
                 result.add(curPayment);

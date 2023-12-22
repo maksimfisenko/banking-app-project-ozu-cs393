@@ -5,6 +5,9 @@ import com.ozyegin.cs393.entities.AccountType;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper
 public interface AccountTypeMapper {
 
@@ -13,4 +16,8 @@ public interface AccountTypeMapper {
     AccountTypeDTO accountTypeToAccountTypeDto(AccountType accountType);
 
     AccountType accountTypeDtoToAccountType(AccountTypeDTO accountTypeDto);
+
+    default List<AccountTypeDTO> accountTypesToAccountTypeDtos(List<AccountType> accountTypes){
+        return accountTypes.stream().map(this::accountTypeToAccountTypeDto).collect(Collectors.toList());
+    }
 }

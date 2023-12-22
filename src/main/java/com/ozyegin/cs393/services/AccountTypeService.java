@@ -26,12 +26,14 @@ public class AccountTypeService {
         return accountTypeMapper.accountTypeToAccountTypeDto(accountType);
     }
 
-    public List<AccountType> getAllAccountTypes() {
-        return accountTypeRepository.findAll();
+    public List<AccountTypeDTO> getAllAccountTypes() {
+        List<AccountType> accountTypes = accountTypeRepository.findAll();
+        return accountTypeMapper.accountTypesToAccountTypeDtos(accountTypes);
     }
 
-    public AccountType updateAccountType(AccountType updatedAccountType) {
+    public AccountTypeDTO updateAccountType(AccountTypeDTO updatedAccountTypeDTO) {
 
+        AccountType updatedAccountType = accountTypeMapper.accountTypeDtoToAccountType(updatedAccountTypeDTO);
         Long accountTypeId = updatedAccountType.getId();
 
         AccountType accountType = accountTypeRepository.findById(accountTypeId).orElseThrow(() ->
@@ -40,11 +42,13 @@ public class AccountTypeService {
         accountType.setName(updatedAccountType.getName());
         accountType.setDescription(updatedAccountType.getDescription());
         accountType.setDepositRate(updatedAccountType.getDepositRate());
-
-        return accountTypeRepository.save(updatedAccountType);
+        accountType = accountTypeRepository.save(accountType);
+        return accountTypeMapper.accountTypeToAccountTypeDto(accountType);
     }
 
-    public void deleteAccountTypeById(Long id) {
+    public void deleteAccountTypeById(AccountTypeDTO accountTypeDTO) {
+
+        Long id = accountTypeDTO.getId();
         accountTypeRepository.deleteById(id);
     }
 }

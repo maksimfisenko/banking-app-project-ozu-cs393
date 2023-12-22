@@ -1,7 +1,9 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.Transaction;
+import com.ozyegin.cs393.mappers.TransactionMapper;
 import com.ozyegin.cs393.repositories.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,15 @@ import java.util.List;
 public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private TransactionMapper transactionMapper;
 
-    public Transaction createTransaction(Transaction transaction) {
-        return transactionRepository.save(transaction);
+    // CRUD Operations
+
+    public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
+        Transaction transaction = transactionMapper.transactionDtoToTransaction(transactionDTO);
+        transaction = transactionRepository.save(transaction);
+        return transactionMapper.transactionToTransactionDto(transaction);
     }
 
     public List<Transaction> getAllTransactions() {

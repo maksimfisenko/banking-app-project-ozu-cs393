@@ -1,7 +1,9 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.PaymentDTO;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.Payment;
+import com.ozyegin.cs393.mappers.PaymentMapper;
 import com.ozyegin.cs393.repositories.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,15 @@ import java.util.List;
 public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private PaymentMapper paymentMapper;
 
-    public Payment createPayment(Payment payment) {
-        return paymentRepository.save(payment);
+    // CRUD Operations
+
+    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
+        Payment payment = paymentMapper.paymentDtoToPayment(paymentDTO);
+        payment = paymentRepository.save(payment);
+        return paymentMapper.paymentToPaymentDto(payment);
     }
 
     public List<Payment> getAllPayments() {

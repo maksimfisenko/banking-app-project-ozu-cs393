@@ -1,8 +1,13 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
+import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.Payment;
+import com.ozyegin.cs393.mappers.AccountMapper;
+import com.ozyegin.cs393.mappers.DebitCardMapper;
+import com.ozyegin.cs393.mappers.PaymentMapper;
 import com.ozyegin.cs393.repositories.DebitCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +27,19 @@ public class DebitCardService {
     private AccountService accountService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private DebitCardMapper debitCardMapper;
+    @Autowired
+    private PaymentMapper paymentMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     // CRUD Operations
 
-    public DebitCard createDebitCard(DebitCard debitCard) {
-        return debitCardRepository.save(debitCard);
+    public DebitCardDTO createDebitCard(DebitCardDTO debitCardDTO) {
+        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
+        debitCard = debitCardRepository.save(debitCard);
+        return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
     public List<DebitCard> getAllDebitCards() {
@@ -59,7 +72,9 @@ public class DebitCardService {
         debitCard.setNumber(generateUniqueCardNumber());
         debitCard.setExpirationDate(LocalDate.now().plusYears(5));
         debitCard.setName(cardName);
-        debitCard.setAccount(accountService.getAccountByNumber(accountNumber));
+
+        AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
+        debitCard.setAccount(accountMapper.accountDtoToAccount(accountDTO));
 
         return debitCardRepository.save(debitCard);
     }
@@ -99,8 +114,10 @@ public class DebitCardService {
         curPayment.setCurrency(debitCard.getAccount().getCurrency());
         curPayment.setTimeOfPayment(LocalDateTime.now());
         curPayment.setSendingCard(debitCard);
-        curPayment.setReceivingAccount(accountService.getAccountByNumber(receivingAccountNumber));
-        paymentService.createPayment(curPayment);
+
+        AccountDTO accountDTO = accountService.getAccountByNumber(receivingAccountNumber);
+        curPayment.setReceivingAccount(accountMapper.accountDtoToAccount(accountDTO));
+        paymentService.createPayment(paymentMapper.paymentToPaymentDto(curPayment));
 
         return true;
     }

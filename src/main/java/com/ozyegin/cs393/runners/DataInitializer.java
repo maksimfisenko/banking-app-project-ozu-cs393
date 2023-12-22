@@ -1,6 +1,7 @@
 package com.ozyegin.cs393.runners;
 
 import com.ozyegin.cs393.entities.*;
+import com.ozyegin.cs393.mappers.*;
 import com.ozyegin.cs393.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -23,6 +24,21 @@ public class DataInitializer implements ApplicationRunner {
     private AccountTypeService accountTypeService;
     @Autowired
     private DebitCardService debitCardService;
+
+    @Autowired
+    private AccountMapper accountMapper;
+    @Autowired
+    private AccountTypeMapper accountTypeMapper;
+    @Autowired
+    private CurrencyMapper currencyMapper;
+    @Autowired
+    private DebitCardMapper debitCardMapper;
+    @Autowired
+    private PaymentMapper paymentMapper;
+    @Autowired
+    private TransactionMapper transactionMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
     @Override
@@ -49,10 +65,10 @@ public class DataInitializer implements ApplicationRunner {
         accounts.add(accountTest);
         userTest.setAccounts(accounts);
 
-        currencyService.createCurrency(currencyTest);
-        accountTypeService.createAccountType(accountTypeTest);
-        userService.createUser(userTest);
-        accountService.createAccount(accountTest);
-        debitCardService.createDebitCard(debitCardTest);
+        currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currencyTest));
+        accountTypeService.createAccountType(accountTypeMapper.accountTypeToAccountTypeDto(accountTypeTest));
+        userService.createUser(userMapper.userToUserDto(userTest));
+        accountService.createAccount(accountMapper.accountToAccountDto(accountTest));
+        debitCardService.createDebitCard(debitCardMapper.debitCardtoDebitCardDto(debitCardTest));
     }
 }

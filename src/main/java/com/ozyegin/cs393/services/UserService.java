@@ -1,8 +1,10 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.User;
+import com.ozyegin.cs393.mappers.UserMapper;
 import com.ozyegin.cs393.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,15 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
 
     // CRUD operations
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = userMapper.userDtoToUser(userDTO);
+        user = userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 
     public List<User> findAllUsers() {

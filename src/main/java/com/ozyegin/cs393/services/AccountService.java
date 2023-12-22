@@ -1,12 +1,15 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.entities.*;
+import com.ozyegin.cs393.mappers.AccountMapper;
+import com.ozyegin.cs393.mappers.TransactionMapper;
 import com.ozyegin.cs393.repositories.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.RoundingMode;
+import java.math.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,41 +27,38 @@ public class AccountService {
     private DebitCardService debitCardService;
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private AccountMapper accountMapper;
+    @Autowired
+    private TransactionMapper transactionMapper;
 
-    // CRUD operations
-    public Account createAccount(Account account) {
-        return accountRepository.save(account);
+    // CRUD Operations
+
+    public AccountDTO createAccount(AccountDTO accountDTO) {
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
+        account = accountRepository.save(account);
+        return accountMapper.accountToAccountDto(account);
     }
 
-    public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+    public List<AccountDTO> getAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        return accountMapper.accountsToAccountDtos(accounts);
     }
 
-    public Account getAccountByNumber(Long accountNumber) {
-        return accountRepository.findById(accountNumber).orElseThrow(() ->
-                new EntityNotFoundException("Account with number " + accountNumber + " not found"));
-    }
-
-    public Account updateAccount(Account updatedAccount) {
-
-        Long accountNumber = updatedAccount.getNumber();
+    public AccountDTO getAccountByNumber(Long accountNumber) {
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
-
-        account.setDebitCards(updatedAccount.getDebitCards());
-        account.setAmount(updatedAccount.getAmount());
-        account.setName(updatedAccount.getName());
-        account.setOwner(updatedAccount.getOwner());
-        account.setCurrency(updatedAccount.getCurrency());
-        account.setType(updatedAccount.getType());
-        account.setOpeningDate(updatedAccount.getOpeningDate());
-        account.setReceivedTransactions(updatedAccount.getReceivedTransactions());
-        account.setSentTransactions(updatedAccount.getSentTransactions());
-
-        return accountRepository.save(account);
+        return accountMapper.accountToAccountDto(account);
     }
 
-    public void deleteAccountById(Long accountNumber) {
+    public AccountDTO updateAccount(AccountDTO updatedAccountDTO) {
+        Account account = accountMapper.accountDtoToAccount(updatedAccountDTO);
+        account = accountRepository.save(account);
+        return accountMapper.accountToAccountDto(account);
+    }
+
+    public void deleteAccountById(AccountDTO accountDTO) {
+        Long accountNumber = accountDTO.getNumber();
         accountRepository.deleteById(accountNumber);
     }
 
@@ -67,21 +67,14 @@ public class AccountService {
     }
 
     // Backend Service 1: Opening a New Account
-    public Account openAccount(Long userId, Currency currency, AccountType accountType, String name) {
-
-        Account account = new Account();
-        account.setName(name);
-        account.setCurrency(currency);
-        account.setType(accountType);
-        account.setAmount(0.0);
-        account.setOpeningDate(LocalDate.now());
-        account.setOwner(userService.getUserById(userId));
-
-        return accountRepository.save(account);
+    public AccountDTO openAccount(AccountDTO accountDTO) {
+        Account account = accountMapper.accountDtoToAccount(accountDTO);
+        account = accountRepository.save(account);
+        return accountMapper.accountToAccountDto(account);
     }
 
     // Backend Service 2: Changing Account Currency
-    public Account changeCurrency(Long accountNumber, Long currencyId) {
+    public AccountDTO changeCurrency(Long accountNumber, Long currencyId) {
 
         Account account = accountRepository.findById(accountNumber).orElseThrow(() ->
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
@@ -93,13 +86,14 @@ public class AccountService {
         newAmount = newAmount / newCurrency.getExchangeRateToUsd();
 
         DecimalFormat df = new DecimalFormat("#.##");
+        // fix rounding
         df.setRoundingMode(RoundingMode.DOWN);
         newAmount = Double.parseDouble(df.format(newAmount));
 
         account.setCurrency(newCurrency);
         account.setAmount(newAmount);
 
-        return account;
+        return accountMapper.accountToAccountDto(account);
     }
 
     // Backend Service 3: Close an existing Account
@@ -139,6 +133,7 @@ public class AccountService {
         double amountReceiving = amountUSED / receivingAccount.getCurrency().getExchangeRateToUsd();
 
         DecimalFormat df = new DecimalFormat("#.##");
+        // fix rounding
         df.setRoundingMode(RoundingMode.DOWN);
 
         amountReceiving = Double.parseDouble(df.format(amountReceiving));
@@ -151,7 +146,7 @@ public class AccountService {
         currentTransaction.setReceivingAccount(sendingAccount);
         currentTransaction.setTimeOfTransaction(LocalDateTime.now());
 
-        transactionService.createTransaction(currentTransaction);
+        transactionService.createTransaction(transactionMapper.transactionToTransactionDto(currentTransaction));
 
         return sendingAccount.getAmount();
     }
@@ -163,10 +158,10 @@ public class AccountService {
                 new EntityNotFoundException("Account with number " + accountNumber + " not found"));
 
         if (date.isBefore(account.getOpeningDate())){
-            throw new Exception("Account did not exist on " + date.toString());
+            throw new Exception("Account did not exist on " + date);
         }
         if (date.isAfter(LocalDate.now())){
-            throw new Exception("The date " + date.toString() + " is in the future");
+            throw new Exception("The date " + date + " is in the future");
         }
 
         double currentAmount = account.getAmount();

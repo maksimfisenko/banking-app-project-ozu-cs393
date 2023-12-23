@@ -106,7 +106,7 @@ public class DebitCardServiceTest {
         DebitCardDTO createdDebitCard2 = debitCardService.createDebitCard(debitCardMapper.debitCardtoDebitCardDto(debitCard2));
 
 
-        debitCardService.deleteDebitCardById(createdDebitCard1);
+        debitCardService.deleteDebitCardById(createdDebitCard1.getId());
 
         assertEquals(1, debitCardService.getAllDebitCards().size());
     }

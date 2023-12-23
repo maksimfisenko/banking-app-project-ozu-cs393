@@ -35,6 +35,12 @@ public class TransactionService {
         return transactionMapper.TransactionsToTransactionDtos(transactions);
     }
 
+    public TransactionDTO getTransactionById(Long id){
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Transaction with id " + id + " not found"));
+        return transactionMapper.transactionToTransactionDto(transaction);
+    }
+
     public TransactionDTO updateTransaction(TransactionDTO updatedTransactionDTO) {
         Transaction transaction = transactionMapper.transactionDtoToTransaction(updatedTransactionDTO);
         transaction = transactionRepository.save(transaction);
@@ -44,6 +50,7 @@ public class TransactionService {
     public void deleteTransactionById(Long id) {
         transactionRepository.deleteById(id);
     }
+    public void deleteAllTransaction(){ transactionRepository.deleteAll(); }
 
     public List<TransactionDTO> getSendingTransactionsOfAccount(AccountDTO accountDTO){
         Account account = accountMapper.accountDtoToAccount(accountDTO);

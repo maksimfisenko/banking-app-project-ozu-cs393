@@ -45,6 +45,15 @@ public class PaymentService {
     public void deletePaymentById(Long id) {
         paymentRepository.deleteById(id);
     }
+    public void deleteAllPayments(){
+        paymentRepository.deleteAll();
+    }
+
+    public PaymentDTO getPaymentById(Long id){
+        Payment payment = paymentRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Payment with id " + id + " not found"));
+        return paymentMapper.paymentToPaymentDto(payment);
+    }
     public List<PaymentDTO> getPaymentsBySendingCard(DebitCardDTO sendingCardDTO){
         DebitCard sendingCard = debitCardMapper.debitCardDtoToDebitCard(sendingCardDTO);
         List <Payment> payments = paymentRepository.findBySendingCard(sendingCard);

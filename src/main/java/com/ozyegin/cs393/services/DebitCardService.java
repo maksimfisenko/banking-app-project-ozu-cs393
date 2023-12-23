@@ -44,6 +44,12 @@ public class DebitCardService {
         return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
+    public DebitCardDTO getDebitCardById(Long id){
+        DebitCard debitCard = debitCardRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Card with id " + id + " not found"));
+        return debitCardMapper.debitCardtoDebitCardDto(debitCard);
+    }
+
     public List<DebitCardDTO> getAllDebitCards() {
         List<DebitCard> debitCards = debitCardRepository.findAll();
         return debitCardMapper.debutCardsToDebitCardDtos(debitCards);
@@ -56,9 +62,17 @@ public class DebitCardService {
         return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
 
-    public void deleteDebitCardById(DebitCardDTO debitCardDTO) {
-        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
-        debitCardRepository.deleteById(debitCard.getId());
+//    public void deleteDebitCardById(DebitCardDTO debitCardDTO) {
+//        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
+//        debitCardRepository.deleteById(debitCard.getId());
+//    }
+
+    public void deleteDebitCardById(Long id){
+        debitCardRepository.deleteById(id);
+    }
+
+    public void deleteAllDebitCards(){
+        debitCardRepository.deleteAll();
     }
 
     // Backend Service 7: Opening a New Card

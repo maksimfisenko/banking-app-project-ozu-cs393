@@ -1,11 +1,13 @@
 package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
+import com.ozyegin.cs393.dto.CurrencyDTO;
 import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.Currency;
 import com.ozyegin.cs393.entities.Transaction;
 import com.ozyegin.cs393.mappers.AccountMapper;
+import com.ozyegin.cs393.mappers.CurrencyMapper;
 import com.ozyegin.cs393.mappers.TransactionMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,10 @@ public class TransactionServiceTest {
     private AccountService accountService;
     @Autowired
     private AccountMapper accountMapper;
+    @Autowired
+    private CurrencyMapper currencyMapper;
+    @Autowired
+    private CurrencyService currencyService;
 
     @Test
     @Transactional
@@ -97,17 +103,19 @@ public class TransactionServiceTest {
         assertEquals(1, transactionService.getAllTransactions().size());
     }
 
-    /*
+
     @Test
     @Transactional
     public void testGetSendingTransactionsOfAccount(){
+
         Currency currency = new Currency(null, "test", '$', 1);
+        CurrencyDTO currencyDTO = currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currency));
 
         Account account1 = new Account(
-                null, "testName1", currency, null, 100,
+                null, "testName1", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 100,
                 LocalDate.now(), null, null, null, null);
         Account account2 = new Account(
-                null, "testName2", currency, null, 200,
+                null, "testName2", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 200,
                 LocalDate.now(), null, null, null, null);
 
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
@@ -118,20 +126,23 @@ public class TransactionServiceTest {
         accountService.transferMoney(createdAccount2, createdAccount1, 15.0);
 
         List<TransactionDTO> transactionDTOS = transactionService.getSendingTransactionsOfAccount(createdAccount1);
-        assertEquals(transactionDTOS.size(), 2);
-        assertEquals(transactionDTOS.get(1).getAmount(), 10.0);
+        assertEquals(2, transactionDTOS.size());
+        assertEquals(10.0, transactionDTOS.get(1).getAmount());
     }
 
     @Test
     @Transactional
     public void testGetReceivingTransactionsOfAccount(){
+
         Currency currency = new Currency(null, "test", '$', 1);
+        CurrencyDTO currencyDTO = currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currency));
 
         Account account1 = new Account(
-                null, "testName1", currency, null, 100,
+                null, "testName1", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 100,
                 LocalDate.now(), null, null, null, null);
+
         Account account2 = new Account(
-                null, "testName2", currency, null, 200,
+                null, "testName2", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 200,
                 LocalDate.now(), null, null, null, null);
 
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
@@ -141,9 +152,8 @@ public class TransactionServiceTest {
         accountService.transferMoney(createdAccount1, createdAccount2, 10.0);
         accountService.transferMoney(createdAccount2, createdAccount1, 15.0);
 
-        List<TransactionDTO> transactionDTOS = transactionService.getSendingTransactionsOfAccount(createdAccount2);
-        assertEquals(transactionDTOS.size(), 2);
-        assertEquals(transactionDTOS.get(1).getAmount(), 10.0);
+        List<TransactionDTO> transactionDTOS = transactionService.getReceivingTransactionsOfAccount(createdAccount2);
+        assertEquals(2, transactionDTOS.size());
+        assertEquals(10, transactionDTOS.get(1).getAmount());
     }
-     */
 }

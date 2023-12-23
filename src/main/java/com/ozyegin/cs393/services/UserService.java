@@ -63,10 +63,13 @@ public class UserService {
     public List<DebitCardDTO> getAllUserDebitCards(Long id){
         User user = userRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("User with id " + id + " not found"));
-        List <Account> accounts = user.getAccounts();
-        List <DebitCard> debitCards = new ArrayList<DebitCard>();
+        List<Account> accounts = user.getAccounts();
+        List<DebitCard> debitCards = new ArrayList<>();
+        if (accounts == null) {
+            return debitCardMapper.debitCardsToDebitCardDtos(new ArrayList<>());
+        }
         for (Account curAccount : accounts)
             debitCards.addAll(curAccount.getDebitCards());
-        return debitCardMapper.debutCardsToDebitCardDtos(debitCards);
+        return debitCardMapper.debitCardsToDebitCardDtos(debitCards);
     }
 }

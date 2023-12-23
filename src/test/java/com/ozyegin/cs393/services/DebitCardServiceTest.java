@@ -127,31 +127,41 @@ public class DebitCardServiceTest {
 
     }
 
-    /*
     @Test
     @Transactional
     public void testMakePayment(){
-        Currency currency = new Currency(null, "test", '$', 1);
-        Account account = new Account(
-                null, "testName", currency, null, 100,
-                LocalDate.now(), null, null, null, null);
 
+        Currency currency = new Currency(null, "test", '$', 1);
+        CurrencyDTO createdCurrency =
+                currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currency));
+
+        Account account = new Account(
+                null, "testName", currencyMapper.currencyDtoToCurrency(createdCurrency),
+                null, 100, LocalDate.now(), null, null,
+                null, null);
         AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
-        DebitCardDTO debitCardDTO = debitCardService.openDebitCard(createdAccount.getNumber(), "testCard");
+
+        DebitCardDTO debitCardDTO =
+                debitCardService.openDebitCard(createdAccount.getNumber(), "testCard");
+
         Account receivingAccount = new Account(
                 null, "receiver", currency, null, 100,
                 LocalDate.now(), null, null, null, null);
-        AccountDTO receivingAccountDTO = accountMapper.accountToAccountDto(receivingAccount);
 
-        boolean res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50.0);
+        AccountDTO receivingAccountDTO =
+                accountService.createAccount(accountMapper.accountToAccountDto(receivingAccount));
+
+        boolean res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50);
+
         assertTrue(res);
-        assertEquals(createdAccount.getAmount(), 50);
-        assertEquals(receivingAccountDTO.getAmount(), 150);
+        assertEquals(50, createdAccount.getAmount());
+        assertEquals(150, receivingAccountDTO.getAmount());
 
-        res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 150.0);
+        res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 150);
+
         assertFalse(res);
-        assertEquals(createdAccount.getAmount(), 50);
-        assertEquals(receivingAccountDTO.getAmount(), 150);
+        assertEquals(50, createdAccount.getAmount());
+        assertEquals(150, receivingAccountDTO.getAmount());
     }
 
     @Test
@@ -159,11 +169,13 @@ public class DebitCardServiceTest {
     public void testGetPaymentsByDates() {
 
         Currency currency = new Currency(null, "test", '$', 1);
-        Account account = new Account(
-                null, "testName", currency, null, 100,
-                LocalDate.now(), null, null, null, null);
+        CurrencyDTO currencyDTO = currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currency));
 
+        Account account = new Account(
+                null, "testName", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 100,
+                LocalDate.now(), null, null, null, null);
         AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
+
         DebitCardDTO debitCardDTO = debitCardService.openDebitCard(createdAccount.getNumber(), "testCard");
 
         assertThrows(DateTimeException.class, () -> debitCardService.getPaymentsByDates(
@@ -171,16 +183,14 @@ public class DebitCardServiceTest {
         ));
 
         Account receivingAccount = new Account(
-                null, "receiver", currency, null, 100,
+                null, "receiver", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 100,
                 LocalDate.now(), null, null, null, null);
         AccountDTO receivingAccountDTO = accountMapper.accountToAccountDto(receivingAccount);
 
-        debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50.0);
+        debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50);
 
-        List<PaymentDTO> paymentDTOS = debitCardService.getPaymentsByDates(debitCardDTO, LocalDate.now(), LocalDate.now());
-        assertEquals(paymentDTOS.size(), 1);
-
+        List<PaymentDTO> paymentDTOs = debitCardService.getPaymentsByDates(debitCardDTO, LocalDate.now(), LocalDate.now());
+        assertEquals(1, paymentDTOs.size());
 
     }
-     */
 }

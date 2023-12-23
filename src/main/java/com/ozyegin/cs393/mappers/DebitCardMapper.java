@@ -21,7 +21,7 @@ public interface DebitCardMapper {
 
     DebitCard debitCardDtoToDebitCard(DebitCardDTO debitCardDTO);
 
-    default List<DebitCardDTO> debutCardsToDebitCardDtos (List<DebitCard> debitCards){
+    default List<DebitCardDTO> debitCardsToDebitCardDtos (List<DebitCard> debitCards){
         return debitCards.stream().map(this::debitCardtoDebitCardDto).collect(Collectors.toList());
     }
 }

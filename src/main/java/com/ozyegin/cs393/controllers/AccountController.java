@@ -107,22 +107,22 @@ public class AccountController {
 
     //Service 5
     @PutMapping("/{amount}/transfer")
-    public ResponseEntity<double> transferMoney(@RequestBody AccountDTO sendingAccountDTO,
+    public ResponseEntity<Double> transferMoney(@RequestBody AccountDTO sendingAccountDTO,
                                                 @RequestBody AccountDTO receivingAccountDTO,
-                                                @PathVariable double amount){
+                                                @PathVariable Double amount){
         double res = accountService.transferMoney(sendingAccountDTO, receivingAccountDTO, amount);
         if (res == -1)
-            return new ResponseEntity<double>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
         else
-            return new ResponseEntity<double>(res, HttpStatus.OK);
+            return new ResponseEntity<Double>(res, HttpStatus.OK);
     }
 
     //Service 6
     @GetMapping("/{accountNumber}/getByDate")
-    public ResponseEntity<double> getAmountOnSelectedDate(@RequestBody AccountDTO accountDTO,
+    public ResponseEntity<Double> getAmountOnSelectedDate(@RequestBody AccountDTO accountDTO,
                                                           @RequestBody LocalDate date){
         double res = accountService.getAmountOnSelectedDate(accountDTO, date);
-        return new ResponseEntity<double>(res, HttpStatus.OK);
+        return new ResponseEntity<Double>(res, HttpStatus.OK);
     }
 
 }

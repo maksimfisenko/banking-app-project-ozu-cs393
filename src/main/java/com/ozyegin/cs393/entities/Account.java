@@ -1,14 +1,23 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "sequence-generator")
+    @SequenceGenerator(
+            name = "sequence-generator",
+            sequenceName = "sequence-generator",
+            initialValue = 100000,
+            allocationSize = 1
+    )
     private Long number;
     @Column(nullable = false)
     private String name;

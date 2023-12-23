@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class PaymentDTO {
     private Long id;
-    private Long sendingCardId;
-    private Long receivingAccountNumber;
+    private DebitCardDTO sendingCard;
+    private AccountDTO receivingAccount;
     private LocalDateTime timeOfPayment;
-    private Long currencyId;
+    private CurrencyDTO currency;
     private double amount;
 
     public PaymentDTO() {
@@ -22,20 +22,20 @@ public class PaymentDTO {
         this.id = id;
     }
 
-    public Long getSendingCardId() {
-        return sendingCardId;
+    public DebitCardDTO getSendingCard() {
+        return sendingCard;
     }
 
-    public void setSendingCardId(Long sendingCardId) {
-        this.sendingCardId = sendingCardId;
+    public void setSendingCard(DebitCardDTO sendingCard) {
+        this.sendingCard = sendingCard;
     }
 
-    public Long getReceivingAccountNumber() {
-        return receivingAccountNumber;
+    public AccountDTO getReceivingAccountNumb() {
+        return receivingAccount;
     }
 
-    public void setReceivingAccountNumber(Long receivingAccountNumber) {
-        this.receivingAccountNumber = receivingAccountNumber;
+    public void setReceivingAccountNumber(AccountDTO receivingAccount) {
+        this.receivingAccount = receivingAccount;
     }
 
     public LocalDateTime getTimeOfPayment() {
@@ -46,12 +46,12 @@ public class PaymentDTO {
         this.timeOfPayment = timeOfPayment;
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public CurrencyDTO getCurrency() {
+        return currency;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
+    public void setCurrencyId(CurrencyDTO currency) {
+        this.currency = currency;
     }
 
     public double getAmount() {
@@ -67,22 +67,22 @@ public class PaymentDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PaymentDTO that = (PaymentDTO) o;
-        return Double.compare(that.amount, amount) == 0 && Objects.equals(id, that.id) && Objects.equals(sendingCardId, that.sendingCardId) && Objects.equals(receivingAccountNumber, that.receivingAccountNumber) && Objects.equals(timeOfPayment, that.timeOfPayment) && Objects.equals(currencyId, that.currencyId);
+        return Double.compare(that.amount, amount) == 0 && Objects.equals(id, that.id) && Objects.equals(sendingCard, that.sendingCard) && Objects.equals(receivingAccount, that.receivingAccount) && Objects.equals(timeOfPayment, that.timeOfPayment) && Objects.equals(currency, that.currency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sendingCardId, receivingAccountNumber, timeOfPayment, currencyId, amount);
+        return Objects.hash(id, sendingCard, receivingAccount, timeOfPayment, currency, amount);
     }
 
     @Override
     public String toString() {
         return "PaymentDTO{" +
                 "id=" + id +
-                ", sendingCardId=" + sendingCardId +
-                ", receivingAccountNumber=" + receivingAccountNumber +
+                ", sendingCardId=" + sendingCard +
+                ", receivingAccountNumber=" + receivingAccount +
                 ", timeOfPayment=" + timeOfPayment +
-                ", currencyId=" + currencyId +
+                ", currencyId=" + currency +
                 ", amount=" + amount +
                 '}';
     }

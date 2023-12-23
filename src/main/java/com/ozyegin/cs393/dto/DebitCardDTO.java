@@ -11,7 +11,7 @@ public class DebitCardDTO {
     private String number;
     private LocalDate expirationDate;
     private String name;
-    private Long accountNumber;
+    private AccountDTO account;
 
     public DebitCardDTO() {
     }
@@ -48,12 +48,12 @@ public class DebitCardDTO {
         this.name = name;
     }
 
-    public Long getAccountNumber() {
-        return accountNumber;
+    public AccountDTO getAccount() {
+        return account;
     }
 
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setAccount(AccountDTO account) {
+        this.account = account;
     }
 
     @Override
@@ -61,12 +61,12 @@ public class DebitCardDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DebitCardDTO that = (DebitCardDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(number, that.number) && Objects.equals(expirationDate, that.expirationDate) && Objects.equals(name, that.name) && Objects.equals(accountNumber, that.accountNumber);
+        return Objects.equals(id, that.id) && Objects.equals(number, that.number) && Objects.equals(expirationDate, that.expirationDate) && Objects.equals(name, that.name) && Objects.equals(account, that.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, expirationDate, name, accountNumber);
+        return Objects.hash(id, number, expirationDate, name, account);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DebitCardDTO {
                 ", number='" + number + '\'' +
                 ", expirationDate=" + expirationDate +
                 ", name='" + name + '\'' +
-                ", accountId=" + accountNumber +
+                ", accountId=" + account +
                 '}';
     }
 }

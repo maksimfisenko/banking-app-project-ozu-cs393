@@ -34,6 +34,7 @@ public class AccountServiceTest {
     @Test
     @Transactional
     public void testCreateAccount() {
+
         Account account = new Account(
                 null, "testName", null, null, 100,
                 LocalDate.now(), null, null, null, null);
@@ -64,6 +65,20 @@ public class AccountServiceTest {
         assertEquals(2, createdAccounts.size());
         assertEquals("testName1", createdAccounts.get(0).getName());
         assertEquals(200, createdAccounts.get(1).getAmount());
+    }
+
+    @Test
+    @Transactional
+    public void testGetAccountByNumber() {
+        Account account = new Account(
+                null, "testName", null, null, 100,
+                LocalDate.now(), null, null, null, null);
+
+        AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
+        AccountDTO foundAccount = accountService.getAccountByNumber(createdAccount.getNumber());
+
+        assertEquals(createdAccount.getNumber(), foundAccount.getNumber());
+        assertEquals(createdAccount.getAmount(), foundAccount.getAmount());
     }
 
     @Test

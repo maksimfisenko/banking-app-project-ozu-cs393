@@ -24,61 +24,108 @@ public class AccountTypeServiceTest {
     @Transactional
     public void testCreateAccountType() {
 
-        AccountType accountType = new AccountType(
-                null, "testAccountType", "testDescription", 1);
+        AccountType accountType = new AccountType(null, "test", "test", 1);
 
         AccountTypeDTO createdAccountType =
-                accountTypeService.createAccountType(accountTypeMapper.accountTypeToAccountTypeDto(accountType));
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType));
 
         assertNotNull(createdAccountType);
         assertNotNull(createdAccountType.getId());
-        assertEquals("testAccountType", createdAccountType.getName());
+        assertEquals("test", createdAccountType.getName());
     }
 
-//    @Test
-//    @Transactional
-//    public void testGetAllAccountTypes() {
-//        AccountType createdAccountType1 = accountTypeService.createAccountType(
-//                new AccountType(null, "testAccountType1",
-//                        "testDescription1", 1));
-//        AccountType createdAccountType2 = accountTypeService.createAccountType(
-//                new AccountType(null, "testAccountType2",
-//                        "testDescription2", 2));
-//
-//        List<AccountType> createdAccountTypes = accountTypeService.getAllAccountTypes();
-//
-//        assertEquals(2, createdAccountTypes.size());
-//        assertEquals("testAccountType1", createdAccountTypes.get(0).getName());
-//        assertEquals("testDescription2", createdAccountTypes.get(1).getDescription());
-//    }
-//
-//    @Test
-//    @Transactional
-//    public void updateAccountType() {
-//        AccountType createdAccountType = accountTypeService.createAccountType(
-//                new AccountType(null, "testAccountType",
-//                        "testDescription", 1));
-//
-//        createdAccountType.setName("updatedAccountType");
-//        AccountType updatedAccountType = accountTypeService.updateAccountType(createdAccountType);
-//
-//        assertNotNull(updatedAccountType);
-//        assertEquals(createdAccountType.getId(), updatedAccountType.getId());
-//        assertEquals("updatedAccountType", updatedAccountType.getName());
-//    }
-//
-//    @Test
-//    @Transactional
-//    public void testDeleteAccountTypeById() {
-//        AccountType createdAccountType1 = accountTypeService.createAccountType(
-//                new AccountType(null, "testAccountType1",
-//                        "testDescription1", 1));
-//        AccountType createdAccountType2 = accountTypeService.createAccountType(
-//                new AccountType(null, "testAccountType2",
-//                        "testDescription2", 2));
-//
-//        accountTypeService.deleteAccountTypeById(createdAccountType1.getId());
-//
-//        assertEquals(1, accountTypeService.getAllAccountTypes().size());
-//    }
+    @Test
+    @Transactional
+    public void testGetAllAccountTypes() {
+
+        AccountType accountType1 = new AccountType(null, "test1", "test", 1);
+        AccountType accountType2 = new AccountType(null, "test2", "test", 2);
+
+        AccountTypeDTO createdAccountType1 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType1));
+        AccountTypeDTO createdAccountType2 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType2));
+
+        List<AccountTypeDTO> createdAccountTypes = accountTypeService.getAllAccountTypes();
+
+        assertEquals(2, createdAccountTypes.size());
+        assertEquals("test1", createdAccountTypes.get(0).getName());
+        assertEquals(2, createdAccountTypes.get(1).getDepositRate());
+    }
+
+    @Test
+    @Transactional
+    public void testGetAccountTypeById() {
+
+        AccountType accountType = new AccountType(null, "test", "test", 1);
+
+        AccountTypeDTO createdAccountType =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType));
+        AccountTypeDTO foundAccountType =
+                accountTypeService.getAccountTypeById(createdAccountType.getId());
+
+        assertEquals(createdAccountType.getId(), foundAccountType.getId());
+        assertEquals(createdAccountType.getName(), foundAccountType.getName());
+    }
+
+    @Test
+    @Transactional
+    public void updateAccountType() {
+
+        AccountType accountType = new AccountType(null, "test", "test", 1);
+
+        AccountTypeDTO createdAccountType =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType));
+
+        createdAccountType.setName("updatedAccountType");
+        AccountTypeDTO updatedAccountType = accountTypeService.updateAccountType(createdAccountType);
+
+        assertNotNull(updatedAccountType);
+        assertEquals(createdAccountType.getId(), updatedAccountType.getId());
+        assertEquals("updatedAccountType", updatedAccountType.getName());
+
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteAccountTypeById() {
+
+        AccountType accountType1 = new AccountType(null, "test1", "test", 1);
+        AccountType accountType2 = new AccountType(null, "test2", "test", 2);
+
+        AccountTypeDTO createdAccountType1 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType1));
+        AccountTypeDTO createdAccountType2 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType2));
+
+        accountTypeService.deleteAccountTypeById(createdAccountType1.getId());
+
+        assertEquals(1, accountTypeService.getAllAccountTypes().size());
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteAllAccountTypes() {
+
+        AccountType accountType1 = new AccountType(null, "test1", "test", 1);
+        AccountType accountType2 = new AccountType(null, "test2", "test", 2);
+
+        AccountTypeDTO createdAccountType1 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType1));
+        AccountTypeDTO createdAccountType2 =
+                accountTypeService.createAccountType(
+                        accountTypeMapper.accountTypeToAccountTypeDto(accountType2));
+
+        accountTypeService.deleteAllAccountTypes();
+
+        assertEquals(0, accountTypeService.getAllAccountTypes().size());
+    }
 }

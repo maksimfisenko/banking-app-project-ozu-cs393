@@ -1,18 +1,14 @@
 package com.ozyegin.cs393.dto;
 
-import com.ozyegin.cs393.entities.Account;
-import com.ozyegin.cs393.entities.Currency;
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class TransactionDTO {
     private Long id;
-    private Long sendingAccountNumber;
-    private Long receivingAccountNumber;
+    private AccountDTO sendingAccount;
+    private AccountDTO receivingAccount;
     private LocalDateTime timeOfTransaction;
-    private Long currencyId;
+    private CurrencyDTO currency;
     private double amount;
 
     public TransactionDTO() {
@@ -26,20 +22,20 @@ public class TransactionDTO {
         this.id = id;
     }
 
-    public Long getSendingAccountNumber() {
-        return sendingAccountNumber;
+    public AccountDTO getSendingAccount() {
+        return sendingAccount;
     }
 
-    public void setSendingAccountNumber(Long sendingAccountNumber) {
-        this.sendingAccountNumber = sendingAccountNumber;
+    public void setSendingAccount(AccountDTO sendingAccount) {
+        this.sendingAccount = sendingAccount;
     }
 
-    public Long getReceivingAccountNumber() {
-        return receivingAccountNumber;
+    public AccountDTO getReceivingAccount() {
+        return receivingAccount;
     }
 
-    public void setReceivingAccountNumber(Long receivingAccountNumber) {
-        this.receivingAccountNumber = receivingAccountNumber;
+    public void setReceivingAccount(AccountDTO receivingAccount) {
+        this.receivingAccount = receivingAccount;
     }
 
     public LocalDateTime getTimeOfTransaction() {
@@ -50,12 +46,12 @@ public class TransactionDTO {
         this.timeOfTransaction = timeOfTransaction;
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public CurrencyDTO getCurrency() {
+        return currency;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
+    public void setCurrency(CurrencyDTO currency) {
+        this.currency = currency;
     }
 
     public double getAmount() {
@@ -71,22 +67,22 @@ public class TransactionDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TransactionDTO that = (TransactionDTO) o;
-        return Double.compare(that.amount, amount) == 0 && Objects.equals(id, that.id) && Objects.equals(sendingAccountNumber, that.sendingAccountNumber) && Objects.equals(receivingAccountNumber, that.receivingAccountNumber) && Objects.equals(timeOfTransaction, that.timeOfTransaction) && Objects.equals(currencyId, that.currencyId);
+        return Double.compare(that.amount, amount) == 0 && Objects.equals(id, that.id) && Objects.equals(sendingAccount, that.sendingAccount) && Objects.equals(receivingAccount, that.receivingAccount) && Objects.equals(timeOfTransaction, that.timeOfTransaction) && Objects.equals(currency, that.currency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sendingAccountNumber, receivingAccountNumber, timeOfTransaction, currencyId, amount);
+        return Objects.hash(id, sendingAccount, receivingAccount, timeOfTransaction, currency, amount);
     }
 
     @Override
     public String toString() {
         return "TransactionDTO{" +
                 "id=" + id +
-                ", sendingAccountNumber=" + sendingAccountNumber +
-                ", receivingAccountNumber=" + receivingAccountNumber +
+                ", sendingAccountNumber=" + sendingAccount +
+                ", receivingAccountNumber=" + receivingAccount +
                 ", timeOfTransaction=" + timeOfTransaction +
-                ", currencyId=" + currencyId +
+                ", currencyId=" + currency +
                 ", amount=" + amount +
                 '}';
     }

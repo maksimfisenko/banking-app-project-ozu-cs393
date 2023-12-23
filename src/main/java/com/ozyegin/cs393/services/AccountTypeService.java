@@ -1,6 +1,8 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.AccountTypeDTO;
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.AccountType;
 import com.ozyegin.cs393.mappers.AccountTypeMapper;
 import com.ozyegin.cs393.repositories.AccountTypeRepository;
@@ -31,24 +33,23 @@ public class AccountTypeService {
         return accountTypeMapper.accountTypesToAccountTypeDtos(accountTypes);
     }
 
+    public AccountTypeDTO getAccountTypeById(Long id) {
+        AccountType accountType = accountTypeRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Account Type with id " + id + " not found"));
+        return accountTypeMapper.accountTypeToAccountTypeDto(accountType);
+    }
+
     public AccountTypeDTO updateAccountType(AccountTypeDTO updatedAccountTypeDTO) {
-
-        AccountType updatedAccountType = accountTypeMapper.accountTypeDtoToAccountType(updatedAccountTypeDTO);
-        Long accountTypeId = updatedAccountType.getId();
-
-        AccountType accountType = accountTypeRepository.findById(accountTypeId).orElseThrow(() ->
-                new EntityNotFoundException("Account Type with id " + accountTypeId + " not found"));
-
-        accountType.setName(updatedAccountType.getName());
-        accountType.setDescription(updatedAccountType.getDescription());
-        accountType.setDepositRate(updatedAccountType.getDepositRate());
+        AccountType accountType = accountTypeMapper.accountTypeDtoToAccountType(updatedAccountTypeDTO);
         accountType = accountTypeRepository.save(accountType);
         return accountTypeMapper.accountTypeToAccountTypeDto(accountType);
     }
 
-    public void deleteAccountTypeById(AccountTypeDTO accountTypeDTO) {
+    public void deleteAccountTypeById(Long accountTypeId) {
+        accountTypeRepository.deleteById(accountTypeId);
+    }
 
-        Long id = accountTypeDTO.getId();
-        accountTypeRepository.deleteById(id);
+    public void deleteAllAccountTypes() {
+        accountTypeRepository.deleteAll();
     }
 }

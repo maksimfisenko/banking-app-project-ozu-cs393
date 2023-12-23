@@ -37,7 +37,7 @@ public class AccountService {
     @Autowired
     private DebitCardMapper debitCardMapper;
 
-    // CRUD Operations
+    // CRUD OPERATIONS
 
     // CRUD & Backend Service 1: Opening a New Account
     public AccountDTO createAccount(AccountDTO accountDTO) {
@@ -72,6 +72,7 @@ public class AccountService {
         accountRepository.deleteAll();
     }
 
+    // BACKEND SERVICES
 
     // Backend Service 2: Changing Account Currency
     public AccountDTO changeCurrency(AccountDTO accountDTO, CurrencyDTO currencyDTO) {
@@ -163,7 +164,7 @@ public class AccountService {
         List <TransactionDTO> receivedTransactions = transactionService.getReceivingTransactionsOfAccount(
                 accountMapper.accountToAccountDto(account));
         for (TransactionDTO curTransaction : receivedTransactions){
-            CurrencyDTO currency = currencyService.getCurrencyById(curTransaction.getCurrencyId());
+            CurrencyDTO currency = currencyService.getCurrencyById(curTransaction.getCurrency().getId());
             if (curTransaction.getTimeOfTransaction().isAfter(date.atStartOfDay())) {
                 currentAmount = currentAmount * currency.getExchangeRateToUsd();
                 currentAmount = currentAmount / account.getCurrency().getExchangeRateToUsd();

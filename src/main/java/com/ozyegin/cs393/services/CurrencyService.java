@@ -31,11 +31,6 @@ public class CurrencyService {
         return currencyMapper.currenciesToCurrencyDtos(currencies);
     }
 
-    /*public CurrencyDTO getCurrencyById(CurrencyDTO currencyDTO) {
-        Currency currency = currencyMapper.currencyDtoToCurrency(currencyDTO);
-        return currencyMapper.currencyToCurrencyDto(currency);
-    }*/
-
     public CurrencyDTO getCurrencyById(Long id) {
         Currency currency = currencyRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Currency with id " + id + " not found"));
@@ -43,22 +38,16 @@ public class CurrencyService {
     }
 
     public CurrencyDTO updateCurrency(CurrencyDTO updatedCurrencyDto) {
-
-        Currency updatedCurrency = currencyMapper.currencyDtoToCurrency(updatedCurrencyDto);
-        Long id = updatedCurrency.getId();
-
-        Currency currency = currencyRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Currency with id " + id + " not found"));
-
-        currency.setName(updatedCurrency.getName());
-        currency.setSymbol(updatedCurrency.getSymbol());
-        currency.setExchangeRateToUsd(updatedCurrency.getExchangeRateToUsd());
+        Currency currency = currencyMapper.currencyDtoToCurrency(updatedCurrencyDto);
         currency = currencyRepository.save(currency);
         return currencyMapper.currencyToCurrencyDto(currency);
     }
 
-    public void deleteCurrencyById(CurrencyDTO currencyDTO) {
-        Currency currency = currencyMapper.currencyDtoToCurrency(currencyDTO);
-        currencyRepository.deleteById(currency.getId());
+    public void deleteCurrencyById(Long id) {
+        currencyRepository.deleteById(id);
+    }
+
+    public void deleteAllCurrencies() {
+        currencyRepository.deleteAll();
     }
 }

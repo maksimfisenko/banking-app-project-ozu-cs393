@@ -17,10 +17,8 @@ public interface DebitCardMapper {
 
     DebitCardMapper INSTANCE = Mappers.getMapper(DebitCardMapper.class);
 
-    @Mapping(source = "account.number", target = "accountNumber")
     DebitCardDTO debitCardtoDebitCardDto(DebitCard debitCard);
 
-    @Mapping(source = "accountNumber", target = "account.number")
     DebitCard debitCardDtoToDebitCard(DebitCardDTO debitCardDTO);
 
     default List<DebitCardDTO> debutCardsToDebitCardDtos (List<DebitCard> debitCards){

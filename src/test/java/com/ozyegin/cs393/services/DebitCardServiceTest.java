@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,7 +155,7 @@ public class DebitCardServiceTest {
 
     @Test
     @Transactional
-    public void testGetPaymentsByDates() throws Exception {
+    public void testGetPaymentsByDates() {
 
         Currency currency = new Currency(null, "test", '$', 1);
         Account account = new Account(
@@ -163,7 +165,9 @@ public class DebitCardServiceTest {
         AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
         DebitCardDTO debitCardDTO = debitCardService.openDebitCard(createdAccount.getNumber(), "testCard");
 
-        //assertThrows()...
+        assertThrows(DateTimeException.class, () -> debitCardService.getPaymentsByDates(
+                debitCardDTO, LocalDate.now().plusDays(1), LocalDate.now()
+        ));
 
         Account receivingAccount = new Account(
                 null, "receiver", currency, null, 100,

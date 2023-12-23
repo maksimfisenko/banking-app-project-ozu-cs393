@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -118,13 +119,13 @@ public class DebitCardService {
     }
 
     // Backend Service 10: Get all payments within specified dates
-    public List <PaymentDTO> getPaymentsByDates(DebitCardDTO debitCardDTO, LocalDate start, LocalDate end) throws Exception {
+    public List <PaymentDTO> getPaymentsByDates(DebitCardDTO debitCardDTO, LocalDate start, LocalDate end) {
 
         DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
         if (start.isBefore(end))
-            throw new Exception("Dates are incorrect");
+            throw new DateTimeException("Dates are incorrect");
         if (end.isAfter(LocalDate.now()))
-            throw new Exception("The date " + end.toString() + " is in the future");
+            throw new DateTimeException("The date " + end.toString() + " is in the future");
 
         List <PaymentDTO> result = new ArrayList<PaymentDTO>();
         DebitCard sendingCard = debitCardRepository.findById(debitCard.getId()).orElseThrow(() ->

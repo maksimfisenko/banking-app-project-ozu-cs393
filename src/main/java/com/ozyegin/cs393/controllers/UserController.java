@@ -1,6 +1,7 @@
 package com.ozyegin.cs393.controllers;
 
 
+import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -72,5 +73,22 @@ public class UserController {
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id){
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Service 4
+    @DeleteMapping("/noAccount")
+    public ResponseEntity<Void> deleteUsersWithNoAccounts(){
+        userService.deleteUsersWithNoAccounts();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Service 9
+    @GetMapping("/{id}/cards")
+    public ResponseEntity<List<DebitCardDTO>> getAllUserDebitCards(@PathVariable Long id){
+        List<DebitCardDTO> debitCardDTOS = userService.getAllUserDebitCards(id);
+        if (debitCardDTOS.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(debitCardDTOS, HttpStatus.OK);
     }
 }

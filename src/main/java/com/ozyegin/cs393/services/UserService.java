@@ -37,9 +37,10 @@ public class UserService {
         return userMapper.UsersToUserDtos(users);
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() ->
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("User with id " + id + " not found"));
+        return userMapper.userToUserDto(user);
     }
 
     public UserDTO updateUser(UserDTO updatedUserDto) {
@@ -51,6 +52,7 @@ public class UserService {
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+    public void deleteAllUsers(){ userRepository.deleteAll(); }
 
     // Backend Service 4: Delete Users With No Accounts
     public void deleteUsersWithNoAccounts() {

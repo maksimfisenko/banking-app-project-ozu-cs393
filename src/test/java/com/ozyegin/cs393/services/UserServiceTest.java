@@ -1,7 +1,10 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.UserDTO;
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.User;
+import com.ozyegin.cs393.mappers.AccountMapper;
 import com.ozyegin.cs393.mappers.UserMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +23,10 @@ public class UserServiceTest {
     private UserService userService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    AccountMapper accountMapper;
 
     @Test
     @Transactional
@@ -85,5 +93,29 @@ public class UserServiceTest {
         userService.deleteUserById(createdUser1.getId());
 
         assertEquals(1, userService.findAllUsers().size());
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteUsersWithNoAccounts(){
+        User user1 =
+                new User(null, "testFirstName1", "testLastName1",
+                        "testPhoneNumber1", "test1@test.com", null);
+        User user2 =
+                new User(null, "testFirstName2", "testLastName2",
+                        "testPhoneNumber2", "test2@test.com", null);
+
+        UserDTO createdUser1 = userService.createUser(userMapper.userToUserDto(user1));
+        UserDTO createdUser2 = userService.createUser(userMapper.userToUserDto(user2));
+
+        Account account = new Account(
+                null, "testName", null, null, 100,
+                LocalDate.now(), user1, null, null, null);
+
+        AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
+
+        userService.deleteUsersWithNoAccounts();
+        assertEquals(userService.findAllUsers().size(), 1);
+
     }
 }

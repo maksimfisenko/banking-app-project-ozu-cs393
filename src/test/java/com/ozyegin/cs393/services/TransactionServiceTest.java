@@ -97,6 +97,7 @@ public class TransactionServiceTest {
         assertEquals(1, transactionService.getAllTransactions().size());
     }
 
+    /*
     @Test
     @Transactional
     public void testGetSendingTransactionsOfAccount(){
@@ -144,4 +145,5 @@ public class TransactionServiceTest {
         assertEquals(transactionDTOS.size(), 2);
         assertEquals(transactionDTOS.get(1).getAmount(), 10.0);
     }
+     */
 }

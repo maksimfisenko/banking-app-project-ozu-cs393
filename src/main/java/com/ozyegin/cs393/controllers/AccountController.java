@@ -1,12 +1,15 @@
 package com.ozyegin.cs393.controllers;
 
 import com.ozyegin.cs393.dto.AccountDTO;
+import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,6 +42,7 @@ public class AccountController {
         }
     }
 
+    //Service 1
     @GetMapping("/{accountNumber}")
     public ResponseEntity<AccountDTO> getAccountByNumber(@PathVariable Long accountNumber) {
 
@@ -77,6 +81,48 @@ public class AccountController {
     public ResponseEntity<Void> deleteAccountByNumber(@PathVariable Long accountNumber) {
         accountService.deleteAccountByNumber(accountNumber);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Service 2
+    @PutMapping("/{accountNumber}/change_currency")
+    public ResponseEntity<AccountDTO> changeCurrency(@RequestBody AccountDTO accountDTO, @RequestBody CurrencyDTO currencyDTO){
+        AccountDTO updatedAccount = accountService.changeCurrency(accountDTO, currencyDTO);
+
+        if (updatedAccount == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
+        }
+    }
+
+    //Service 3
+    @DeleteMapping("/{accountNumber}/close")
+    public ResponseEntity<Void> closeAccount(@RequestBody AccountDTO accountDTO){
+        boolean res = accountService.closeAccount(accountDTO);
+        if (!res)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        else
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Service 5
+    @PutMapping("/{amount}/transfer")
+    public ResponseEntity<double> transferMoney(@RequestBody AccountDTO sendingAccountDTO,
+                                                @RequestBody AccountDTO receivingAccountDTO,
+                                                @PathVariable double amount){
+        double res = accountService.transferMoney(sendingAccountDTO, receivingAccountDTO, amount);
+        if (res == -1)
+            return new ResponseEntity<double>(HttpStatus.BAD_REQUEST);
+        else
+            return new ResponseEntity<double>(res, HttpStatus.OK);
+    }
+
+    //Service 6
+    @GetMapping("/{accountNumber}/getByDate")
+    public ResponseEntity<double> getAmountOnSelectedDate(@RequestBody AccountDTO accountDTO,
+                                                          @RequestBody LocalDate date){
+        double res = accountService.getAmountOnSelectedDate(accountDTO, date);
+        return new ResponseEntity<double>(res, HttpStatus.OK);
     }
 
 }

@@ -1,10 +1,12 @@
 package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
+import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.User;
 import com.ozyegin.cs393.mappers.AccountMapper;
+import com.ozyegin.cs393.mappers.DebitCardMapper;
 import com.ozyegin.cs393.mappers.UserMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,11 @@ public class UserServiceTest {
     @Autowired
     private AccountService accountService;
     @Autowired
-    AccountMapper accountMapper;
+    private AccountMapper accountMapper;
+    @Autowired
+    private DebitCardService debitCardService;
+    @Autowired
+    private DebitCardMapper debitCardMapper;
 
     @Test
     @Transactional
@@ -116,6 +122,31 @@ public class UserServiceTest {
 
         userService.deleteUsersWithNoAccounts();
         assertEquals(userService.findAllUsers().size(), 1);
+
+    }
+    @Test
+    @Transactional
+    public void testGetAllUserDebitCards(){
+        User user =
+                new User(null, "testFirstName", "testLastName",
+                        "testPhoneNumber", "test@test.com", null);
+        UserDTO createdUser = userService.createUser(userMapper.userToUserDto(user));
+        Account account1 = new Account(
+                null, "testName", null, null, 100,
+                LocalDate.now(), user, null, null, null);
+
+        AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
+        DebitCardDTO debitCardDTO1 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
+        Account account2 = new Account(
+                null, "testName", null, null, 100,
+                LocalDate.now(), user, null, null, null);
+
+        AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
+        DebitCardDTO debitCardDTO2 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
+
+        List<DebitCardDTO> debitCardDTOS = userService.getAllUserDebitCards(user.getId());
+        assertEquals(debitCardDTOS.size(), 2);
+
 
     }
 }

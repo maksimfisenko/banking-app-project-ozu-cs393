@@ -1,9 +1,11 @@
 package com.ozyegin.cs393.dto;
 
 import com.ozyegin.cs393.entities.AccountType;
+import com.ozyegin.cs393.entities.DebitCard;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -15,6 +17,7 @@ public class AccountDTO {
     private double amount;
     private LocalDate openingDate;
     private UserDTO owner;
+//    private List<DebitCardDTO> debitCards;
 
     public AccountDTO() {
     }

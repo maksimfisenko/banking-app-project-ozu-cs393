@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -148,6 +149,8 @@ public class UserServiceTest {
 
         DebitCardDTO debitCardDTO2 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
 
+        createdUser = userService.updateUser(createdUser);
+        user = userMapper.userDtoToUser(createdUser);
         List<DebitCardDTO> debitCardDTOs = userService.getAllUserDebitCards(createdUser.getId());
         assertEquals(2, debitCardDTOs.size());
 

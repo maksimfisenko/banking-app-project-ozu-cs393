@@ -4,11 +4,9 @@ import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
 import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.*;
-import com.ozyegin.cs393.mappers.AccountMapper;
-import com.ozyegin.cs393.mappers.CurrencyMapper;
-import com.ozyegin.cs393.mappers.DebitCardMapper;
-import com.ozyegin.cs393.mappers.TransactionMapper;
+import com.ozyegin.cs393.mappers.*;
 import com.ozyegin.cs393.repositories.AccountRepository;
+import com.ozyegin.cs393.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +35,10 @@ public class AccountService {
     private CurrencyMapper currencyMapper;
     @Autowired
     private DebitCardMapper debitCardMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
 
     // CRUD OPERATIONS
 
@@ -134,6 +137,9 @@ public class AccountService {
         currentTransaction.setSendingAccount(sendingAccount);
         currentTransaction.setReceivingAccount(receivingAccount);
         currentTransaction.setTimeOfTransaction(LocalDateTime.now());
+
+        this.updateAccount(accountMapper.accountToAccountDto(receivingAccount));
+        this.updateAccount(accountMapper.accountToAccountDto(sendingAccount));
 
         transactionService.createTransaction(transactionMapper.transactionToTransactionDto(currentTransaction));
 

@@ -152,7 +152,8 @@ public class DebitCardServiceTest {
                 accountService.createAccount(accountMapper.accountToAccountDto(receivingAccount));
 
         boolean res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50);
-
+        createdAccount = accountService.getAccountByNumber(createdAccount.getNumber());
+        receivingAccountDTO = accountService.getAccountByNumber(receivingAccountDTO.getNumber());
         assertTrue(res);
         assertEquals(50, createdAccount.getAmount());
         assertEquals(150, receivingAccountDTO.getAmount());
@@ -185,7 +186,7 @@ public class DebitCardServiceTest {
         Account receivingAccount = new Account(
                 null, "receiver", currencyMapper.currencyDtoToCurrency(currencyDTO), null, 100,
                 LocalDate.now(), null, null, null, null);
-        AccountDTO receivingAccountDTO = accountMapper.accountToAccountDto(receivingAccount);
+        AccountDTO receivingAccountDTO = accountService.createAccount(accountMapper.accountToAccountDto(receivingAccount));
 
         debitCardService.makePayment(debitCardDTO, receivingAccountDTO, 50);
 

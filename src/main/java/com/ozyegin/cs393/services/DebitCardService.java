@@ -50,16 +50,7 @@ public class DebitCardService {
 
     public DebitCardDTO updateDebitCard(DebitCardDTO updatedDebitCardDTO) {
 
-        DebitCard updatedDebitCard = debitCardMapper.debitCardDtoToDebitCard(updatedDebitCardDTO);
-        Long id = updatedDebitCard.getId();
-
-        DebitCard debitCard = debitCardRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Debit Card with id " + id + " not found"));
-
-        debitCard.setName(updatedDebitCard.getName());
-        debitCard.setAccount(updatedDebitCard.getAccount());
-        debitCard.setNumber(updatedDebitCard.getNumber());
-        debitCard.setExpirationDate(updatedDebitCard.getExpirationDate());
+        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(updatedDebitCardDTO);
         debitCard = debitCardRepository.save(debitCard);
         return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }

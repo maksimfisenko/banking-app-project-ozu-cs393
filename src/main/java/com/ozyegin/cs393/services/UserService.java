@@ -39,17 +39,7 @@ public class UserService {
     }
 
     public UserDTO updateUser(UserDTO updatedUserDto) {
-        User updatedUser = userMapper.userDtoToUser(updatedUserDto);
-        Long id = updatedUser.getId();
-
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("User with id " + id + " not found"));
-
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setPhoneNumber(updatedUser.getPhoneNumber());
-        user.setEmail(updatedUser.getEmail());
-        user.setAccounts(updatedUser.getAccounts());
+        User user = userMapper.userDtoToUser(updatedUserDto);
         user = userRepository.save(user);
         return userMapper.userToUserDto(user);
     }

@@ -37,17 +37,7 @@ public class PaymentService {
 
     public PaymentDTO updatePayment(PaymentDTO updatedPaymentDTO) {
 
-        Payment updatedPayment = paymentMapper.paymentDtoToPayment(updatedPaymentDTO);
-        Long id = updatedPayment.getId();
-
-        Payment payment = paymentRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Payment with id " + id + " not found"));
-
-        payment.setSendingCard(updatedPayment.getSendingCard());
-        payment.setReceivingAccount(updatedPayment.getReceivingAccount());
-        payment.setTimeOfPayment(updatedPayment.getTimeOfPayment());
-        payment.setCurrency(updatedPayment.getCurrency());
-        payment.setAmount(updatedPayment.getAmount());
+        Payment payment = paymentMapper.paymentDtoToPayment(updatedPaymentDTO);
         payment = paymentRepository.save(payment);
         return paymentMapper.paymentToPaymentDto(payment);
     }

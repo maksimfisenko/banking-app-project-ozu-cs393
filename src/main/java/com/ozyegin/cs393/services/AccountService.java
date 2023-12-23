@@ -132,7 +132,7 @@ public class AccountService {
         currentTransaction.setAmount(amount);
         currentTransaction.setCurrency(sendingAccount.getCurrency());
         currentTransaction.setSendingAccount(sendingAccount);
-        currentTransaction.setReceivingAccount(sendingAccount);
+        currentTransaction.setReceivingAccount(receivingAccount);
         currentTransaction.setTimeOfTransaction(LocalDateTime.now());
 
         transactionService.createTransaction(transactionMapper.transactionToTransactionDto(currentTransaction));

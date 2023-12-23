@@ -104,49 +104,52 @@ public class UserServiceTest {
     @Test
     @Transactional
     public void testDeleteUsersWithNoAccounts(){
-        User user1 =
-                new User(null, "testFirstName1", "testLastName1",
+
+        User user1 = new User(null, "testFirstName1", "testLastName1",
                         "testPhoneNumber1", "test1@test.com", null);
-        User user2 =
-                new User(null, "testFirstName2", "testLastName2",
+        User user2 = new User(null, "testFirstName2", "testLastName2",
                         "testPhoneNumber2", "test2@test.com", null);
 
         UserDTO createdUser1 = userService.createUser(userMapper.userToUserDto(user1));
         UserDTO createdUser2 = userService.createUser(userMapper.userToUserDto(user2));
 
         Account account = new Account(
-                null, "testName", null, null, 100,
-                LocalDate.now(), user1, null, null, null);
+                null, "testName", null, null, 100, LocalDate.now(),
+                userMapper.userDtoToUser(createdUser1), null, null,
+                null);
 
         AccountDTO createdAccount = accountService.createAccount(accountMapper.accountToAccountDto(account));
 
         userService.deleteUsersWithNoAccounts();
-        assertEquals(userService.findAllUsers().size(), 1);
+        assertEquals(1, userService.findAllUsers().size());
 
     }
     @Test
     @Transactional
     public void testGetAllUserDebitCards(){
-        User user =
-                new User(null, "testFirstName", "testLastName",
+
+        User user = new User(null, "testFirstName", "testLastName",
                         "testPhoneNumber", "test@test.com", null);
         UserDTO createdUser = userService.createUser(userMapper.userToUserDto(user));
+
         Account account1 = new Account(
                 null, "testName", null, null, 100,
-                LocalDate.now(), user, null, null, null);
-
+                LocalDate.now(), userMapper.userDtoToUser(createdUser), null, null,
+                null);
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
+
         DebitCardDTO debitCardDTO1 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
+
         Account account2 = new Account(
                 null, "testName", null, null, 100,
-                LocalDate.now(), user, null, null, null);
-
+                LocalDate.now(), userMapper.userDtoToUser(createdUser), null, null,
+                null);
         AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
+
         DebitCardDTO debitCardDTO2 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
 
-        List<DebitCardDTO> debitCardDTOS = userService.getAllUserDebitCards(user.getId());
-        assertEquals(debitCardDTOS.size(), 2);
-
+        List<DebitCardDTO> debitCardDTOs = userService.getAllUserDebitCards(createdUser.getId());
+        assertEquals(2, debitCardDTOs.size());
 
     }
 }

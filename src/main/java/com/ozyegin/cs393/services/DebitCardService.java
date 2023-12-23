@@ -52,7 +52,7 @@ public class DebitCardService {
 
     public List<DebitCardDTO> getAllDebitCards() {
         List<DebitCard> debitCards = debitCardRepository.findAll();
-        return debitCardMapper.debutCardsToDebitCardDtos(debitCards);
+        return debitCardMapper.debitCardsToDebitCardDtos(debitCards);
     }
 
     public DebitCardDTO updateDebitCard(DebitCardDTO updatedDebitCardDTO) {
@@ -127,16 +127,18 @@ public class DebitCardService {
 
         AccountDTO accountDTO = accountService.getAccountByNumber(receivingAccountDTO.getNumber());
         curPayment.setReceivingAccount(accountMapper.accountDtoToAccount(accountDTO));
+
         paymentService.createPayment(paymentMapper.paymentToPaymentDto(curPayment));
 
         return true;
     }
 
     // Backend Service 10: Get all payments within specified dates
-    public List <PaymentDTO> getPaymentsByDates(DebitCardDTO debitCardDTO, LocalDate start, LocalDate end) {
+    public List <PaymentDTO> getPaymentsByDates(DebitCardDTO debitCardDTO, LocalDate start, LocalDate end)
+            throws DateTimeException{
 
         DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
-        if (start.isBefore(end))
+        if (start.isAfter(end))
             throw new DateTimeException("Dates are incorrect");
         if (end.isAfter(LocalDate.now()))
             throw new DateTimeException("The date " + end.toString() + " is in the future");

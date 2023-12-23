@@ -36,18 +36,8 @@ public class TransactionService {
     }
 
     public TransactionDTO updateTransaction(TransactionDTO updatedTransactionDTO) {
-        Transaction updatedTransaction = transactionMapper.transactionDtoToTransaction(updatedTransactionDTO);
-        Long id = updatedTransaction.getId();
-
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Transaction with id " + id + " not found"));
-
-        transaction.setSendingAccount(updatedTransaction.getSendingAccount());
-        transaction.setReceivingAccount(updatedTransaction.getReceivingAccount());
-        transaction.setTimeOfTransaction(updatedTransaction.getTimeOfTransaction());
-        transaction.setCurrency(updatedTransaction.getCurrency());
-        transaction.setAmount(updatedTransaction.getAmount());
-        transaction = transactionRepository.save(updatedTransaction);
+        Transaction transaction = transactionMapper.transactionDtoToTransaction(updatedTransactionDTO);
+        transaction = transactionRepository.save(transaction);
         return transactionMapper.transactionToTransactionDto(transaction);
     }
 

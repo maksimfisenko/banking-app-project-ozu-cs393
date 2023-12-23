@@ -1,5 +1,6 @@
 package com.ozyegin.cs393.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.PaymentDTO;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/debitCards")
@@ -19,6 +21,8 @@ public class DebitCardController {
 
     @Autowired
     private DebitCardService debitCardService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping
     public ResponseEntity<List<DebitCardDTO>> getAllDebitCards(){
@@ -90,10 +94,17 @@ public class DebitCardController {
 
     //Service 8
     @PutMapping("/{amount}/pay")
-    public ResponseEntity<Void> makePayment(@RequestBody DebitCardDTO debitCardDTO,
-                                            @RequestBody AccountDTO receivingAccount,
+    public ResponseEntity<Void> makePayment(@RequestBody Map<String, Object> requestBody,
                                             @PathVariable double amount){
-        boolean res = debitCardService.makePayment(debitCardDTO, receivingAccount, amount);
+
+        DebitCardDTO debitCardDTO = objectMapper.convertValue(requestBody.get("debitCardDTO"), DebitCardDTO.class);
+        AccountDTO receivingAccountDTO = objectMapper.convertValue(requestBody.get("receivingAccountDTO"), AccountDTO.class);
+
+        if (debitCardDTO == null || receivingAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean res = debitCardService.makePayment(debitCardDTO, receivingAccountDTO, amount);
         if (!res)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         else

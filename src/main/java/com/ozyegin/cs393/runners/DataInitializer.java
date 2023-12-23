@@ -1,5 +1,6 @@
 package com.ozyegin.cs393.runners;
 
+import com.ozyegin.cs393.dto.*;
 import com.ozyegin.cs393.entities.*;
 import com.ozyegin.cs393.mappers.*;
 import com.ozyegin.cs393.services.*;
@@ -43,19 +44,34 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
         Currency currencyTest = new Currency(null, "Dollar", '$', 1);
+        CurrencyDTO currencyDTO = currencyService.createCurrency(
+                currencyMapper.currencyToCurrencyDto(currencyTest));
+
         AccountType accountTypeTest = new AccountType(null, "Simple",
                 "Just very simple", 0);
+        AccountTypeDTO accountTypeDTO = accountTypeService.createAccountType(
+                accountTypeMapper.accountTypeToAccountTypeDto(accountTypeTest));
+
+
         User userTest = new User(null, "John", "Gray",
                 "+900000", "abc@abc.com", null);
+        UserDTO userDTO = userService.createUser(
+                userMapper.userToUserDto(userTest));
 
         Account accountTest = new Account(null, "TestAccount11111",
-                currencyTest, accountTypeTest, 1000, LocalDate.now(),
-                userTest, null, null, null);
+                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 1000, LocalDate.now(),
+                userMapper.userDtoToUser(userDTO), null, null, null);
+        AccountDTO accountDTO = accountService.createAccount(
+                accountMapper.accountToAccountDto(accountTest));
 
         DebitCard debitCardTest = new DebitCard(null, "1234567812345678",
-                LocalDate.ofYearDay(2024, 1), "TestCard", accountTest);
-
+                LocalDate.ofYearDay(2024, 1), "TestCard",
+                accountMapper.accountDtoToAccount(accountDTO));
+        DebitCardDTO debitCardDTO = debitCardService.createDebitCard(
+                debitCardMapper.debitCardtoDebitCardDto(debitCardTest));
 
         ArrayList<DebitCard> cards = new ArrayList<>();
         cards.add(debitCardTest);
@@ -65,10 +81,5 @@ public class DataInitializer implements ApplicationRunner {
         accounts.add(accountTest);
         userTest.setAccounts(accounts);
 
-        currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currencyTest));
-        accountTypeService.createAccountType(accountTypeMapper.accountTypeToAccountTypeDto(accountTypeTest));
-        userService.createUser(userMapper.userToUserDto(userTest));
-        accountService.createAccount(accountMapper.accountToAccountDto(accountTest));
-        debitCardService.createDebitCard(debitCardMapper.debitCardtoDebitCardDto(debitCardTest));
     }
 }

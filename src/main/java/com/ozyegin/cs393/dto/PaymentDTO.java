@@ -1,8 +1,11 @@
 package com.ozyegin.cs393.dto;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Component
 public class PaymentDTO {
     private Long id;
     private DebitCardDTO sendingCard;

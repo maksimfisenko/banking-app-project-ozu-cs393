@@ -1,10 +1,12 @@
 package com.ozyegin.cs393.dto;
 
 import com.ozyegin.cs393.entities.AccountType;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Component
 public class AccountDTO {
     private Long number;
     private String name;

@@ -1,7 +1,10 @@
 package com.ozyegin.cs393.dto;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Objects;
 
+@Component
 public class UserDTO {
     private Long id;
     private String firstName;

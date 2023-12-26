@@ -18,6 +18,7 @@ public class AccountTypeController {
 
     @GetMapping
     private ResponseEntity<List<AccountTypeDTO>> getAllAccountTypes() {
+
         List<AccountTypeDTO> accountTypes = accountTypeService.getAllAccountTypes();
 
         if (accountTypes.isEmpty()) {
@@ -29,6 +30,7 @@ public class AccountTypeController {
 
     @PostMapping
     private ResponseEntity<AccountTypeDTO> createAccountType(@RequestBody AccountTypeDTO accountTypeDTO) {
+
         AccountTypeDTO accountType = accountTypeService.createAccountType(accountTypeDTO);
 
         if (accountType == null) {
@@ -57,6 +59,7 @@ public class AccountTypeController {
 
     @PutMapping("/{accountTypeId}")
     public ResponseEntity<AccountTypeDTO> updateAccountType(@RequestBody AccountTypeDTO accountTypeDTO) {
+
         AccountTypeDTO updatedAccountType = accountTypeService.updateAccountType(accountTypeDTO);
 
         if (updatedAccountType == null) {

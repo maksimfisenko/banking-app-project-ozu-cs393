@@ -30,6 +30,7 @@ public class CurrencyController {
 
     @PostMapping
     private ResponseEntity<CurrencyDTO> createCurrency(@RequestBody CurrencyDTO currencyDTO) {
+
         CurrencyDTO currency = currencyService.createCurrency(currencyDTO);
 
         if (currency == null) {
@@ -58,6 +59,7 @@ public class CurrencyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CurrencyDTO> updateCurrency(@RequestBody CurrencyDTO currencyDTO) {
+
         CurrencyDTO updatedCurrency = currencyService.updateCurrency(currencyDTO);
 
         if (updatedCurrency == null) {

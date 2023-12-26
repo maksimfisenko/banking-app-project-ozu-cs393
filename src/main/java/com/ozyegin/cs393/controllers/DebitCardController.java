@@ -27,31 +27,37 @@ public class DebitCardController {
     @GetMapping
     public ResponseEntity<List<DebitCardDTO>> getAllDebitCards(){
 
-        List<DebitCardDTO> debitCardDTOS = debitCardService.getAllDebitCards();
-        if (debitCardDTOS.isEmpty())
+        List<DebitCardDTO> debitCardDTOs = debitCardService.getAllDebitCards();
+
+        if (debitCardDTOs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else
-            return new ResponseEntity<>(debitCardDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(debitCardDTOs, HttpStatus.OK);
+        }
     }
 
     @PostMapping
     public ResponseEntity<DebitCardDTO> createDebitCard(@RequestBody DebitCardDTO debitCardDTO){
 
         DebitCardDTO createdDebitCard = debitCardService.createDebitCard(debitCardDTO);
-        if (createdDebitCard == null)
+
+        if (createdDebitCard == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        else
+        } else {
             return new ResponseEntity<>(createdDebitCard, HttpStatus.CREATED);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DebitCardDTO> getDebitCardById(@PathVariable Long id){
+
         DebitCardDTO debitCardDTO = debitCardService.getDebitCardById(id);
 
-        if (debitCardDTO == null)
+        if (debitCardDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-         else
+        } else {
             return new ResponseEntity<>(debitCardDTO, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/{id}")
@@ -61,12 +67,14 @@ public class DebitCardController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DebitCardDTO> updateDebitCard(@RequestBody DebitCardDTO debitCardDTO){
+
         DebitCardDTO updatedDebitCard = debitCardService.updateDebitCard(debitCardDTO);
 
-        if(updatedDebitCard == null)
+        if (updatedDebitCard == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
+        } else {
             return new ResponseEntity<>(updatedDebitCard, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping
@@ -81,18 +89,23 @@ public class DebitCardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //Service 7
-    @PostMapping("/{accountNumber}/openNew")
-    public ResponseEntity<DebitCardDTO> openDebitCard(@PathVariable Long accountNumber,
-                                                      @RequestBody String cardName){
+    //Service 7: Open a Debit Card
+    @PostMapping("/open")
+    public ResponseEntity<DebitCardDTO> openDebitCard(@RequestBody Map<String, Object> requestBody){
+
+        Long accountNumber = objectMapper.convertValue(requestBody.get("accountNumber"), Long.class);
+        String cardName = objectMapper.convertValue(requestBody.get("cardName"), String.class);
+
         DebitCardDTO createdDebitCard = debitCardService.openDebitCard(accountNumber, cardName);
-        if (createdDebitCard == null)
+
+        if (createdDebitCard == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        else
+        } else {
             return new ResponseEntity<>(createdDebitCard, HttpStatus.CREATED);
+        }
     }
 
-    //Service 8
+    // Service 8
     @PutMapping("/{amount}/pay")
     public ResponseEntity<Void> makePayment(@RequestBody Map<String, Object> requestBody,
                                             @PathVariable double amount){

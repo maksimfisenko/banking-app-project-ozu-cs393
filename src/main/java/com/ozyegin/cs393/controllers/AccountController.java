@@ -3,8 +3,8 @@ package com.ozyegin.cs393.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.services.AccountService;
-import com.ozyegin.cs393.services.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,7 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private CurrencyService currencyService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -39,13 +38,12 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO accountDTO) {
+        AccountDTO createdAccount = accountService.createAccount(accountDTO);
 
-        AccountDTO createdAccountDTO = accountService.createAccount(accountDTO);
-
-        if (createdAccountDTO == null) {
+        if (createdAccount == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
-            return new ResponseEntity<>(createdAccountDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
         }
     }
 
@@ -69,13 +67,12 @@ public class AccountController {
 
     @PutMapping("/{accountNumber}")
     public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO) {
+        AccountDTO updatedAccount = accountService.updateAccount(accountDTO);
 
-        AccountDTO updatedAccountDTO = accountService.updateAccount(accountDTO);
-
-        if (updatedAccountDTO == null) {
+        if (updatedAccount == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
+            return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
         }
     }
 
@@ -91,13 +88,10 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Service 2: Change Currency
-    @PutMapping("/changeCurrency/{accountNumber}/{currencyId}")
-    public ResponseEntity<AccountDTO> changeCurrency(@PathVariable Long accountNumber, @PathVariable Long currencyId){
-
+    //Service 2
+    @PutMapping("/{accountNumber}/changeCurrency")
+    public ResponseEntity<AccountDTO> changeCurrency(@PathVariable Long accountNumber, @RequestBody CurrencyDTO currencyDTO){
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
-        CurrencyDTO currencyDTO = currencyService.getCurrencyById(currencyId);
-
         AccountDTO updatedAccount = accountService.changeCurrency(accountDTO, currencyDTO);
 
         if (updatedAccount == null) {
@@ -107,53 +101,46 @@ public class AccountController {
         }
     }
 
-    // Service 3: Close Account
-    @DeleteMapping("/close/{accountNumber}")
-    public ResponseEntity<Void> closeAccount(@PathVariable Long accountNumber){
-
-        AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
+    //Service 3
+    @DeleteMapping("/{accountNumber}/close")
+    public ResponseEntity<Void> closeAccount(@RequestBody AccountDTO accountDTO){
         boolean res = accountService.closeAccount(accountDTO);
-
         if (!res)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         else
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Service 5: Transfer Money
-    @PutMapping("/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody){
+    //Service 5
+    @PutMapping("/{amount}/transfer")
+    public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody,
+                                                @PathVariable Double amount){
 
-        Long sendingAccountNumber = objectMapper.convertValue(requestBody.get("sendingAccountNumber"), Long.class);
-        Long receivingAccountNumber = objectMapper.convertValue(requestBody.get("receivingAccountNumber"), Long.class);
-        Double amount = objectMapper.convertValue(requestBody.get("amount"), Double.class);
+        Long sendingAccountId = objectMapper.convertValue(requestBody.get(
+                "sendingAccountId"), Long.class);
+        Long receivingAccountId = objectMapper.convertValue(requestBody.get(
+                "receivingAccountId"), Long.class);
 
-        if (sendingAccountNumber == null || receivingAccountNumber == null || amount == null) {
+        if (sendingAccountId == null || receivingAccountId == null || amount == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        AccountDTO sendingAccountDTO = accountService.getAccountByNumber(sendingAccountNumber);
-        AccountDTO receivingAccountDTO = accountService.getAccountByNumber(receivingAccountNumber);
-
-        double res = accountService.transferMoney(sendingAccountDTO, receivingAccountDTO, amount);
-
+        double res = accountService.transferMoney(sendingAccountId, receivingAccountId, amount);
         if (res == -1)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         else
-            return new ResponseEntity<>(res, HttpStatus.OK);
+            return new ResponseEntity<Double>(res, HttpStatus.OK);
     }
 
-    // Service 6: Get Amount of Money on Certain Date
-    @GetMapping("/getByDate/{accountNumber}/{dateString}")
+    //Service 6
+    @GetMapping("/{accountNumber}/getByDate")
     public ResponseEntity<Double> getAmountOnSelectedDate(@PathVariable Long accountNumber,
-                                                          @PathVariable String dateString){
-
+                                                          @RequestBody Map<String, Object> payload){
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
+        String dateString = (String) payload.get("date");
         LocalDate date = LocalDate.parse(dateString);
-
         double res = accountService.getAmountOnSelectedDate(accountDTO, date);
-
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        return new ResponseEntity<Double>(res, HttpStatus.OK);
     }
 
 }

@@ -29,6 +29,7 @@ public class AccountServiceTest {
     private AccountMapper accountMapper;
     @Autowired
     private CurrencyMapper currencyMapper;
+    @Autowired CurrencyService currencyService;
 
 
     @Test
@@ -181,20 +182,30 @@ public class AccountServiceTest {
     @Transactional
     public void testTransferMoney() {
 
-        Currency currency = new Currency(null, "test", '$', 1);
+        Currency currency = new Currency(null, "test", '$', 1.0);
+        CurrencyDTO currencyDTO = currencyService.createCurrency(currencyMapper.currencyToCurrencyDto(currency));
 
         Account account1 = new Account(
-                null, "testName1", currency, null, 100,
+                null, "testName1", currencyMapper.currencyDtoToCurrency(currencyDTO),
+                null, 100,
                 LocalDate.now(), null, null, null, null);
         Account account2 = new Account(
-                null, "testName2", currency, null, 200,
+                null, "testName2", currencyMapper.currencyDtoToCurrency(currencyDTO),
+                null, 200,
                 LocalDate.now(), null, null, null, null);
 
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
         AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
 
-        assertEquals(-1.0, accountService.transferMoney(createdAccount1, createdAccount2, 101));
-        assertEquals(100, accountService.transferMoney(createdAccount1, createdAccount2, 100));
+        assertEquals(-1.0, accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 101));
+        assertEquals(100, accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 100));
+        createdAccount1 = accountService.getAccountByNumber(createdAccount1.getNumber());
+        createdAccount2 = accountService.getAccountByNumber(createdAccount2.getNumber());
+        accountService.transferMoney(createdAccount2.getNumber(), createdAccount1.getNumber(), 151);
+        createdAccount1 = accountService.getAccountByNumber(createdAccount1.getNumber());
+        createdAccount2 = accountService.getAccountByNumber(createdAccount2.getNumber());
+        assertEquals(151, createdAccount1.getAmount());
+        assertEquals(149, createdAccount2.getAmount());
     }
 
     @Test

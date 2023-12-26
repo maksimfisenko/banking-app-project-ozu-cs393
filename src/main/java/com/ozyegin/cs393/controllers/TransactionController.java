@@ -21,12 +21,25 @@ public class TransactionController {
     @GetMapping
     public ResponseEntity<List<TransactionDTO>> getAllTransactions(){
 
-        List<TransactionDTO> transactionDTOS = transactionService.getAllTransactions();
+        List<TransactionDTO> transactionDTOs = transactionService.getAllTransactions();
 
-        if (transactionDTOS.isEmpty())
+        if (transactionDTOs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else
-            return new ResponseEntity<>(transactionDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(transactionDTOs, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id){
+
+        TransactionDTO transactionDTO = transactionService.getTransactionById(id);
+
+        if (transactionDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(transactionDTO, HttpStatus.OK);
+        }
     }
 
     @PostMapping
@@ -34,20 +47,11 @@ public class TransactionController {
 
         TransactionDTO createdTransactionDTO = transactionService.createTransaction(transactionDTO);
 
-        if (createdTransactionDTO == null)
+        if (createdTransactionDTO == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        else
+        } else {
             return new ResponseEntity<>(createdTransactionDTO, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id){
-        TransactionDTO transactionDTO = transactionService.getTransactionById(id);
-
-        if (transactionDTO == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>(transactionDTO, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/{id}")
@@ -57,12 +61,14 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionDTO> updateTransaction(@RequestBody TransactionDTO transactionDTO){
+
         TransactionDTO updatedTransaction = transactionService.updateTransaction(transactionDTO);
 
-        if (updatedTransaction == null)
+        if (updatedTransaction == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
+        } else {
             return new ResponseEntity<>(updatedTransaction, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping

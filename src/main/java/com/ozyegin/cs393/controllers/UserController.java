@@ -17,35 +17,41 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers(){
-        List<UserDTO> userDTOS = userService.findAllUsers();
 
-        if (userDTOS.isEmpty())
+        List<UserDTO> userDTOs = userService.findAllUsers();
+
+        if (userDTOs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else
-            return new ResponseEntity<>(userDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(userDTOs, HttpStatus.OK);
+        }
     }
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+
         UserDTO createdUserDTO = userService.createUser(userDTO);
 
-        if (createdUserDTO == null)
+        if (createdUserDTO == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        else
+        } else {
             return new ResponseEntity<>(HttpStatus.CREATED);
-
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+
         UserDTO userDTO = userService.getUserById(id);
 
-        if (userDTO == null)
+        if (userDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
+        } else {
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/{id}")
@@ -55,12 +61,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updatedUser(@RequestBody UserDTO userDTO){
+
         UserDTO updatedUser = userService.updateUser(userDTO);
 
-        if (updatedUser == null)
+        if (updatedUser == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
+        } else {
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping
@@ -75,20 +83,23 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //Service 4
-    @DeleteMapping("/noAccount")
+    // Service 4: Delete Users With No Account
+    @DeleteMapping("/deleteWithNoAccount")
     public ResponseEntity<Void> deleteUsersWithNoAccounts(){
         userService.deleteUsersWithNoAccounts();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //Service 9
-    @GetMapping("/{id}/cards")
+    // Service 9: Get All User's Debit Cards
+    @GetMapping("/cards/{id}")
     public ResponseEntity<List<DebitCardDTO>> getAllUserDebitCards(@PathVariable Long id){
+
         List<DebitCardDTO> debitCardDTOS = userService.getAllUserDebitCards(id);
-        if (debitCardDTOS.isEmpty())
+
+        if (debitCardDTOS.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else
+        } else {
             return new ResponseEntity<>(debitCardDTOS, HttpStatus.OK);
+        }
     }
 }

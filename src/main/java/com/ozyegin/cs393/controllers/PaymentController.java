@@ -20,31 +20,37 @@ public class PaymentController {
     @GetMapping
     public ResponseEntity<List<PaymentDTO>> getAllPayments(){
 
-        List<PaymentDTO> paymentDTOS = paymentService.getAllPayments();
-        if (paymentDTOS.isEmpty())
+        List<PaymentDTO> paymentDTOs = paymentService.getAllPayments();
+
+        if (paymentDTOs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else
-            return new ResponseEntity<>(paymentDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(paymentDTOs, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable Long id) {
+
+        PaymentDTO paymentDTO = paymentService.getPaymentById(id);
+
+        if (paymentDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+        }
     }
 
     @PostMapping
     public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO paymentDTO){
 
-        PaymentDTO createdPayment= paymentService.createPayment(paymentDTO);
-        if (createdPayment == null)
+        PaymentDTO createdPaymentDTO= paymentService.createPayment(paymentDTO);
+
+        if (createdPaymentDTO == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        else
-            return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<PaymentDTO> handlePostOnExistingDebitCard(@PathVariable Long id) {
-
-        PaymentDTO paymentDTO = paymentService.getPaymentById(id);
-        if (paymentDTO == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(createdPaymentDTO, HttpStatus.CREATED);
+        }
     }
 
     @PostMapping("/{id}")
@@ -54,12 +60,14 @@ public class PaymentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PaymentDTO> updatePayment(@RequestBody PaymentDTO paymentDTO){
+
         PaymentDTO updatedPayment = paymentService.updatePayment(paymentDTO);
 
-        if (updatedPayment == null)
+        if (updatedPayment == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else
+        } else {
             return new ResponseEntity<>(updatedPayment, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping

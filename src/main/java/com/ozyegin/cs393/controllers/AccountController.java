@@ -3,8 +3,8 @@ package com.ozyegin.cs393.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
-import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.services.AccountService;
+import com.ozyegin.cs393.services.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,8 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
-
+    @Autowired
+    private CurrencyService currencyService;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -38,6 +39,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO accountDTO) {
+
         AccountDTO createdAccount = accountService.createAccount(accountDTO);
 
         if (createdAccount == null) {
@@ -47,7 +49,7 @@ public class AccountController {
         }
     }
 
-    //Service 1
+    // Service 1: Get Account By Number
     @GetMapping("/{accountNumber}")
     public ResponseEntity<AccountDTO> getAccountByNumber(@PathVariable Long accountNumber) {
 
@@ -67,6 +69,7 @@ public class AccountController {
 
     @PutMapping("/{accountNumber}")
     public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO) {
+
         AccountDTO updatedAccount = accountService.updateAccount(accountDTO);
 
         if (updatedAccount == null) {
@@ -88,10 +91,16 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //Service 2
-    @PutMapping("/{accountNumber}/changeCurrency")
-    public ResponseEntity<AccountDTO> changeCurrency(@PathVariable Long accountNumber, @RequestBody CurrencyDTO currencyDTO){
+    // Service 2: Change Currency
+    @PutMapping("/changeCurrency")
+    public ResponseEntity<AccountDTO> changeCurrency(@RequestBody Map<String, Object> requestBody){
+
+        Long accountNumber = objectMapper.convertValue(requestBody.get("accountNumber"), Long.class);
+        Long currencyId = objectMapper.convertValue(requestBody.get("currencyId"), Long.class);
+
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
+        CurrencyDTO currencyDTO = currencyService.getCurrencyById(currencyId);
+
         AccountDTO updatedAccount = accountService.changeCurrency(accountDTO, currencyDTO);
 
         if (updatedAccount == null) {
@@ -101,46 +110,53 @@ public class AccountController {
         }
     }
 
-    //Service 3
-    @DeleteMapping("/{accountNumber}/close")
-    public ResponseEntity<Void> closeAccount(@RequestBody AccountDTO accountDTO){
+    // Service 3: Close Account
+    @DeleteMapping("/close")
+    public ResponseEntity<Void> closeAccount(@RequestBody Long accountNumber){
+
+        AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
+
         boolean res = accountService.closeAccount(accountDTO);
-        if (!res)
+
+        if (!res) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        else
+        } else {
             return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
-    //Service 5
-    @PutMapping("/{amount}/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody,
-                                                @PathVariable Double amount){
+    // Service 5: Transfer Money
+    @PutMapping("/transfer")
+    public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody){
 
-        Long sendingAccountId = objectMapper.convertValue(requestBody.get(
-                "sendingAccountId"), Long.class);
-        Long receivingAccountId = objectMapper.convertValue(requestBody.get(
-                "receivingAccountId"), Long.class);
+        Long sendingAccountId = objectMapper.convertValue(requestBody.get("sendingAccountId"), Long.class);
+        Long receivingAccountId = objectMapper.convertValue(requestBody.get("receivingAccountId"), Long.class);
+        Double amount = objectMapper.convertValue(requestBody.get("amount"), Double.class);
 
         if (sendingAccountId == null || receivingAccountId == null || amount == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         double res = accountService.transferMoney(sendingAccountId, receivingAccountId, amount);
-        if (res == -1)
+
+        if (res == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        else
-            return new ResponseEntity<Double>(res, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
     }
 
-    //Service 6
-    @GetMapping("/{accountNumber}/getByDate")
+    // Service 6: Get Money By Date
+    @GetMapping("getByDate/{accountNumber}/{dateString}")
     public ResponseEntity<Double> getAmountOnSelectedDate(@PathVariable Long accountNumber,
-                                                          @RequestBody Map<String, Object> payload){
+                                                          @PathVariable String dateString){
+
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
-        String dateString = (String) payload.get("date");
         LocalDate date = LocalDate.parse(dateString);
+
         double res = accountService.getAmountOnSelectedDate(accountDTO, date);
-        return new ResponseEntity<Double>(res, HttpStatus.OK);
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 }

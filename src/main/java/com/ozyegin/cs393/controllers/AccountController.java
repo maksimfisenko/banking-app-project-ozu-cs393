@@ -116,14 +116,16 @@ public class AccountController {
     public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody,
                                                 @PathVariable Double amount){
 
-        AccountDTO sendingAccountDTO = objectMapper.convertValue(requestBody.get("sendingAccountDTO"), AccountDTO.class);
-        AccountDTO receivingAccountDTO = objectMapper.convertValue(requestBody.get("receivingAccountDTO"), AccountDTO.class);
+        Long sendingAccountId = objectMapper.convertValue(requestBody.get(
+                "sendingAccountId"), Long.class);
+        Long receivingAccountId = objectMapper.convertValue(requestBody.get(
+                "receivingAccountId"), Long.class);
 
-        if (sendingAccountDTO == null || receivingAccountDTO == null || amount == null) {
+        if (sendingAccountId == null || receivingAccountId == null || amount == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        double res = accountService.transferMoney(sendingAccountDTO, receivingAccountDTO, amount);
+        double res = accountService.transferMoney(sendingAccountId, receivingAccountId, amount);
         if (res == -1)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         else

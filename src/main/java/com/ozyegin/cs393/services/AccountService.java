@@ -115,10 +115,12 @@ public class AccountService {
     }
 
     // Backend Service 5: Transfer Money Between 2 Accounts
-    public double transferMoney (AccountDTO sendingAccountDTO, AccountDTO receivingAccountDTO, double amount){
+    public double transferMoney (Long sendingAccountId, Long receivingAccountId, double amount){
 
-        Account sendingAccount = accountMapper.accountDtoToAccount(sendingAccountDTO);
-        Account receivingAccount = accountMapper.accountDtoToAccount(receivingAccountDTO);
+        Account sendingAccount = accountMapper.accountDtoToAccount(
+                this.getAccountByNumber(sendingAccountId));
+        Account receivingAccount = accountMapper.accountDtoToAccount(
+                this.getAccountByNumber(receivingAccountId));
 
         if (sendingAccount.getAmount() < amount)
             return -1.0;

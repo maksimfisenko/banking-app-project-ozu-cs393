@@ -113,8 +113,8 @@ public class DebitCardService {
 
         DebitCard debitCard  = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
 
-        double ret = accountService.transferMoney(accountMapper.accountToAccountDto(debitCard.getAccount()),
-                receivingAccountDTO, amount);
+        double ret = accountService.transferMoney(debitCard.getAccount().getNumber(),
+                receivingAccountDTO.getNumber(), amount);
 
         if (ret == -1.0)
             return false;

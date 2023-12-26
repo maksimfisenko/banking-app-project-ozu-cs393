@@ -121,9 +121,9 @@ public class TransactionServiceTest {
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
         AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
 
-        accountService.transferMoney(createdAccount1, createdAccount2, 50.0);
-        accountService.transferMoney(createdAccount1, createdAccount2, 10.0);
-        accountService.transferMoney(createdAccount2, createdAccount1, 15.0);
+        accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 50.0);
+        accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 10.0);
+        accountService.transferMoney(createdAccount2.getNumber(), createdAccount1.getNumber(), 15.0);
 
         List<TransactionDTO> transactionDTOS = transactionService.getSendingTransactionsOfAccount(createdAccount1);
         assertEquals(2, transactionDTOS.size());
@@ -148,9 +148,9 @@ public class TransactionServiceTest {
         AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
         AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
 
-        accountService.transferMoney(createdAccount1, createdAccount2, 50.0);
-        accountService.transferMoney(createdAccount1, createdAccount2, 10.0);
-        accountService.transferMoney(createdAccount2, createdAccount1, 15.0);
+        accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 50.0);
+        accountService.transferMoney(createdAccount1.getNumber(), createdAccount2.getNumber(), 10.0);
+        accountService.transferMoney(createdAccount2.getNumber(), createdAccount1.getNumber(), 15.0);
 
         List<TransactionDTO> transactionDTOS = transactionService.getReceivingTransactionsOfAccount(createdAccount2);
         assertEquals(2, transactionDTOS.size());

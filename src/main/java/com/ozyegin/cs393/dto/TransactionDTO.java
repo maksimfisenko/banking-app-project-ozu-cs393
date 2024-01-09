@@ -1,8 +1,6 @@
 package com.ozyegin.cs393.dto;
 
-import jakarta.persistence.Column;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 

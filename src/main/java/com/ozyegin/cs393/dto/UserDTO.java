@@ -1,9 +1,6 @@
 package com.ozyegin.cs393.dto;
 
-import com.ozyegin.cs393.entities.Account;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 import java.util.Objects;
 
 @Component

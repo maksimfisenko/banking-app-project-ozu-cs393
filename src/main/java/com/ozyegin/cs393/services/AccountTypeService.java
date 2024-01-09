@@ -1,8 +1,6 @@
 package com.ozyegin.cs393.services;
 
-import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.AccountTypeDTO;
-import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.AccountType;
 import com.ozyegin.cs393.mappers.AccountTypeMapper;
 import com.ozyegin.cs393.repositories.AccountTypeRepository;

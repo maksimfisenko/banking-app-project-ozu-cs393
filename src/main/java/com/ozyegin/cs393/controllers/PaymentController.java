@@ -1,6 +1,5 @@
 package com.ozyegin.cs393.controllers;
 
-import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.PaymentDTO;
 import com.ozyegin.cs393.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
-
 import java.util.Objects;
 
 @Entity

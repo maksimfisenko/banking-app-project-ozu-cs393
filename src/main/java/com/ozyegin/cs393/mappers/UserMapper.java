@@ -1,13 +1,10 @@
 package com.ozyegin.cs393.mappers;
 
-import com.ozyegin.cs393.dto.CurrencyDTO;
 import com.ozyegin.cs393.dto.UserDTO;
-import com.ozyegin.cs393.entities.Currency;
 import com.ozyegin.cs393.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

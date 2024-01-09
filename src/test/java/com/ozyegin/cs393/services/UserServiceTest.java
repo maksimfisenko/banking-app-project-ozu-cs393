@@ -1,7 +1,6 @@
 package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
-import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.User;
@@ -13,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -125,34 +122,4 @@ public class UserServiceTest {
         assertEquals(1, userService.findAllUsers().size());
 
     }
-//    @Test
-//    @Transactional
-//    public void testGetAllUserDebitCards(){
-//
-//        User user = new User(null, "testFirstName", "testLastName",
-//                        "testPhoneNumber", "test@test.com", null);
-//        UserDTO createdUser = userService.createUser(userMapper.userToUserDto(user));
-//
-//        Account account1 = new Account(
-//                null, "testName", null, null, 100,
-//                LocalDate.now(), userMapper.userDtoToUser(createdUser), null, null,
-//                null);
-//        AccountDTO createdAccount1 = accountService.createAccount(accountMapper.accountToAccountDto(account1));
-//
-//        DebitCardDTO debitCardDTO1 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
-//
-//        Account account2 = new Account(
-//                null, "testName", null, null, 100,
-//                LocalDate.now(), userMapper.userDtoToUser(createdUser), null, null,
-//                null);
-//        AccountDTO createdAccount2 = accountService.createAccount(accountMapper.accountToAccountDto(account2));
-//
-//        DebitCardDTO debitCardDTO2 = debitCardService.openDebitCard(createdAccount1.getNumber(), "testCard");
-//
-//        createdUser = userService.updateUser(createdUser);
-//        user = userMapper.userDtoToUser(createdUser);
-//        List<DebitCardDTO> debitCardDTOs = userService.getAllUserDebitCards(createdUser.getId());
-//        assertEquals(2, debitCardDTOs.size());
-//
-//    }
 }

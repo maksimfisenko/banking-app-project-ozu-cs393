@@ -3,7 +3,6 @@ package com.ozyegin.cs393.services;
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.PaymentDTO;
-import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.Payment;
 import com.ozyegin.cs393.mappers.AccountMapper;
@@ -61,11 +60,6 @@ public class DebitCardService {
         debitCard = debitCardRepository.save(debitCard);
         return debitCardMapper.debitCardtoDebitCardDto(debitCard);
     }
-
-//    public void deleteDebitCardById(DebitCardDTO debitCardDTO) {
-//        DebitCard debitCard = debitCardMapper.debitCardDtoToDebitCard(debitCardDTO);
-//        debitCardRepository.deleteById(debitCard.getId());
-//    }
 
     public void deleteDebitCardById(Long id){
         debitCardRepository.deleteById(id);
@@ -141,9 +135,9 @@ public class DebitCardService {
         if (start.isAfter(end))
             throw new DateTimeException("Dates are incorrect");
         if (end.isAfter(LocalDate.now()))
-            throw new DateTimeException("The date " + end.toString() + " is in the future");
+            throw new DateTimeException("The date " + end + " is in the future");
 
-        List <PaymentDTO> result = new ArrayList<PaymentDTO>();
+        List <PaymentDTO> result = new ArrayList<>();
         DebitCard sendingCard = debitCardRepository.findById(debitCard.getId()).orElseThrow(() ->
                 new EntityNotFoundException("Card with id " + debitCard.getId() + " not found"));
 

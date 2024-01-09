@@ -1,9 +1,7 @@
 package com.ozyegin.cs393.dto;
 
-import com.ozyegin.cs393.entities.Account;
-import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
+import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Objects;
 

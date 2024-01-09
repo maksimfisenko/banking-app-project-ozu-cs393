@@ -43,7 +43,7 @@ public class DataInitializer implements ApplicationRunner {
 
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args){
 
         Currency currencyTest = new Currency(null, "Dollar", '$', 1);
         CurrencyDTO currencyDTO = currencyService.createCurrency(

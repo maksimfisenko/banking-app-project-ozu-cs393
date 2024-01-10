@@ -6,6 +6,11 @@ This is the backend application for a banking app built using Java Spring. The p
 ## Project Description
 [PDF File with Project Description](https://github.com/maksimfisenko/banking-app-project-ozu-cs393/blob/main/Project%20Description.pdf)
 
+## Web Pages Description
+
+### Home
+fefe
+
 ## Important Info
 Server port of the app is **8081**.
 

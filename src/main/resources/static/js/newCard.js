@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function (){
 
     function fetchUserAccounts() {
 
-        const userId = 2;
+        const userId = 1;
         const apiUrl = `accounts/user/${userId}`;
 
         const cardAccountSelect = document.getElementById("card-account");

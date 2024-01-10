@@ -54,7 +54,7 @@ public class DataInitializer implements ApplicationRunner {
                 accountTypeMapper.accountTypeToAccountTypeDto(accountTypeTest));
 
 
-        User userTest1 = new User(null, "Test_1", "Test_1",
+        User userTest1 = new User(null, "John", "Smith",
                 "+900000", "abc@abc.com", null);
         UserDTO userDTO1 = userService.createUser(
                 userMapper.userToUserDto(userTest1));

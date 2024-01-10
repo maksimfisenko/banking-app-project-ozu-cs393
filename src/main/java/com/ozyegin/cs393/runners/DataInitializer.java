@@ -41,7 +41,6 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private UserMapper userMapper;
 
-
     @Override
     public void run(ApplicationArguments args){
 
@@ -55,17 +54,36 @@ public class DataInitializer implements ApplicationRunner {
                 accountTypeMapper.accountTypeToAccountTypeDto(accountTypeTest));
 
 
-        User userTest = new User(null, "John", "Gray",
+        User userTest1 = new User(null, "Test_1", "Test_1",
                 "+900000", "abc@abc.com", null);
-        UserDTO userDTO = userService.createUser(
-                userMapper.userToUserDto(userTest));
+        UserDTO userDTO1 = userService.createUser(
+                userMapper.userToUserDto(userTest1));
 
-        Account accountTest = new Account(null, "TestAccount11111",
+        User userTest2 = new User(null, "Test_2", "Test_2",
+                "+900000", "abc@abc.com", null);
+        UserDTO userDTO2 = userService.createUser(
+                userMapper.userToUserDto(userTest2));
+
+        Account accountTest1 = new Account(null, "TestAccount_1",
                 currencyMapper.currencyDtoToCurrency(currencyDTO),
                 accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 1000, LocalDate.now(),
-                userMapper.userDtoToUser(userDTO), null, null, null);
+                userMapper.userDtoToUser(userDTO1), null, null, null);
         AccountDTO accountDTO = accountService.createAccount(
-                accountMapper.accountToAccountDto(accountTest));
+                accountMapper.accountToAccountDto(accountTest1));
+
+        Account accountTest2 = new Account(null, "TestAccount_2",
+                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 2000, LocalDate.now(),
+                userMapper.userDtoToUser(userDTO1), null, null, null);
+        AccountDTO accountDTO2 = accountService.createAccount(
+                accountMapper.accountToAccountDto(accountTest2));
+
+        Account accountTest3 = new Account(null, "TestAccount_3",
+                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 2000, LocalDate.now(),
+                userMapper.userDtoToUser(userDTO2), null, null, null);
+        AccountDTO accountDTO3 = accountService.createAccount(
+                accountMapper.accountToAccountDto(accountTest3));
 
         DebitCard debitCardTest = new DebitCard(null, "1234567812345678",
                 LocalDate.ofYearDay(2024, 1), "TestCard",
@@ -75,11 +93,15 @@ public class DataInitializer implements ApplicationRunner {
 
         ArrayList<DebitCard> cards = new ArrayList<>();
         cards.add(debitCardTest);
-        accountTest.setDebitCards(cards);
+        accountTest1.setDebitCards(cards);
 
-        ArrayList<Account> accounts = new ArrayList<>();
-        accounts.add(accountTest);
-        userTest.setAccounts(accounts);
+        ArrayList<Account> accounts1 = new ArrayList<>();
+        accounts1.add(accountTest1);
+        userTest1.setAccounts(accounts1);
+
+        ArrayList<Account> accounts2 = new ArrayList<>();
+        accounts2.add(accountTest3);
+        userTest2.setAccounts(accounts2);
 
     }
 }

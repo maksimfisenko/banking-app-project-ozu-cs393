@@ -62,13 +62,25 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AccountDTO>> getAccountsByUserId(@PathVariable Long userId) {
+
+        List<AccountDTO> accounts = accountService.getAccountsByUserId(userId);
+
+        if (accounts.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(accounts, HttpStatus.OK);
+        }
+    }
+
     @PostMapping("/{accountNumber}")
-    public ResponseEntity<Void> handlePostOnExistingAccount() {
+    public ResponseEntity<Void> handlePostOnExistingAccount(@PathVariable String accountNumber) {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping("/{accountNumber}")
-    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO) {
+    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable String accountNumber) {
 
         AccountDTO updatedAccount = accountService.updateAccount(accountDTO);
 
@@ -148,8 +160,7 @@ public class AccountController {
 
     // Service 6: Get Money By Date
     @GetMapping("getByDate/{accountNumber}/{dateString}")
-    public ResponseEntity<Double> getAmountOnSelectedDate(@PathVariable Long accountNumber,
-                                                          @PathVariable String dateString){
+    public ResponseEntity<Double> getAmountOnSelectedDate(@PathVariable Long accountNumber, @PathVariable String dateString){
 
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
         LocalDate date = LocalDate.parse(dateString);

@@ -60,6 +60,11 @@ public class AccountService {
         return accountMapper.accountToAccountDto(account);
     }
 
+    public List<AccountDTO> getAccountsByUserId(Long userId) {
+        List<Account> accounts = accountRepository.findByOwnerId(userId);
+        return accountMapper.accountsToAccountDtos(accounts);
+    }
+
     public AccountDTO updateAccount(AccountDTO updatedAccountDTO) {
         Account account = accountMapper.accountDtoToAccount(updatedAccountDTO);
         account = accountRepository.save(account);

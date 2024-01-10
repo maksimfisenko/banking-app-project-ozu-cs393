@@ -1,10 +1,12 @@
 package com.ozyegin.cs393.services;
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.entities.Account;
 import com.ozyegin.cs393.entities.DebitCard;
 import com.ozyegin.cs393.entities.User;
+import com.ozyegin.cs393.mappers.AccountMapper;
 import com.ozyegin.cs393.mappers.DebitCardMapper;
 import com.ozyegin.cs393.mappers.UserMapper;
 import com.ozyegin.cs393.repositories.UserRepository;
@@ -23,6 +25,8 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private DebitCardMapper debitCardMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     // CRUD operations
 
@@ -71,5 +75,16 @@ public class UserService {
         for (Account curAccount : accounts)
             debitCards.addAll(curAccount.getDebitCards());
         return debitCardMapper.debitCardsToDebitCardDtos(debitCards);
+    }
+
+    // New Service 1: Get all accounts belonging to the User
+    public List<AccountDTO> getAllUserAccounts(Long id){
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("User with id " + id + " not found"));
+        List<Account> accounts = user.getAccounts();
+        List<AccountDTO> res = new ArrayList<>();
+        for (Account curAccount: accounts)
+            res.add(accountMapper.accountToAccountDto(curAccount));
+        return res;
     }
 }

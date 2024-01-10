@@ -31,12 +31,12 @@ No external JavaScript Libraries have been used.
 
 ### New Debit Card Instraction
 1. Choose an existing account from the offerd list.
-2. Enter new card name.
+2. Enter new card name (cannot be empty).
 3. Press the button to save the information.
 
 ### Change Currency Instraction
 1. Choose an existing account from the offerd list.
-2. Choose the new currency from the offerd list
+2. Choose the new currency from the offerd list (cannot choose the old currency).
 3. Press the button to confirm changes. 
 
 ## Collaborators

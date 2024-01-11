@@ -87,6 +87,10 @@ public class AccountService {
 
     // BACKEND SERVICES
 
+    public boolean accountExists(Long accountNumber) {
+        return accountRepository.existsById(accountNumber);
+    }
+
     // Backend Service 2: Changing Account Currency
     public AccountDTO changeCurrency(AccountDTO accountDTO, CurrencyDTO currencyDTO) {
 

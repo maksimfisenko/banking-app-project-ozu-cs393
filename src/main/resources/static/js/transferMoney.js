@@ -52,45 +52,45 @@ document.addEventListener("DOMContentLoaded", function (){
         const sendingAccountSelect = document.getElementById("sending-account");
         const sendingAccountNumber = sendingAccountSelect.options[sendingAccountSelect.selectedIndex].value;
 
-        const apiUrl = `accounts/${sendingAccountNumber}`;
+        const receivingAccountNumber = document.getElementById("receiving-account").value;
+        const amount = document.getElementById("amount").value;
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-
-                const receivingAccountNumber = document.getElementById("receiving-account").value;
-                const amount = document.getElementById("amount").value;
-
-                if (sendingAccountNumber !== receivingAccountNumber) {
-                    if (amount > 0) {
-                        const dataJson = {
-                            sendingAccountNumber: sendingAccountNumber,
-                            receivingAccountNumber: receivingAccountNumber,
-                            amount: amount
-                        };
-                        fetch("/accounts/transfer", {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(dataJson)
+            if (sendingAccountNumber !== receivingAccountNumber) {
+                if (amount > 0) {
+                    const dataJson = {
+                        sendingAccountNumber: sendingAccountNumber,
+                        receivingAccountNumber: receivingAccountNumber,
+                        amount: amount
+                    };
+                    fetch("/accounts/transfer", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(dataJson)
+                    })
+                        .then(response => {
+                            if (response.status === 200) {
+                                return response.json();
+                            } else if (response.status === 400) {
+                                alert("The receiving account doesn't exist.");
+                                throw new Error("Receiving account doesn't exist");
+                            } else if (response.status === 403) {
+                                alert("You cannot transfer more than you have on your balance.")
+                                throw new Error("You cannot transfer more than you have on your balance.")
+                            } else {
+                                throw new Error(`Failed to transfer money. Status: ${response.status}`);
+                            }
                         })
-                            .then(response => response.json())
-                            .then(dataJson => {
-                                console.log(dataJson);
-                            })
-                            .catch(error => {
-                                console.log(error);
-                            });
-                        alert("The money has been transferred successfully!");
-                        fetchAccountAmount(sendingAccountNumber);
-                    } else {
-                        alert("You cannot transfer zero or less amount.")
-                    }
+                        .then(dataJson => {
+                            console.log(dataJson);
+                            alert("The money has been transferred successfully!");
+                            fetchAccountAmount(sendingAccountNumber);
+                        })
+                        .catch(error => {console.log(error)});
                 } else {
-                    alert("You cannot transfer money to the same account.");
+                    alert("You cannot transfer zero or less amount.")
                 }
-            })
-            .catch(error => console.error("Error transferring money:", error));
+            } else {
+                alert("You cannot transfer money to the same account.");
+            }
     });
 });

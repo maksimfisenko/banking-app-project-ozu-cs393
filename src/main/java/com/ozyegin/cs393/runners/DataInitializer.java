@@ -90,7 +90,7 @@ public class DataInitializer implements ApplicationRunner {
                 accountMapper.accountToAccountDto(accountTest3));
 
         DebitCard debitCardTest = new DebitCard(null, "1234567812345678",
-                LocalDate.ofYearDay(2024, 1), "TestCard",
+                LocalDate.ofYearDay(2029, 1), "TestCard",
                 accountMapper.accountDtoToAccount(accountDTO));
         DebitCardDTO debitCardDTO = debitCardService.createDebitCard(
                 debitCardMapper.debitCardtoDebitCardDto(debitCardTest));

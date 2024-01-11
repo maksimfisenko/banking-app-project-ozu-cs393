@@ -152,10 +152,14 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        if (!accountService.accountExists(receivingAccountNumber)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         double res = accountService.transferMoney(sendingAccountNumber, receivingAccountNumber, amount);
 
         if (res == -1) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
             return new ResponseEntity<>(res, HttpStatus.OK);
         }

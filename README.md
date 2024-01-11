@@ -21,7 +21,7 @@ This page represents open a new debit card service. REST service is implemeted. 
 This page represents change currency service. REST service is implemeted. Validation is implemented.
 
 ### Close Account
-This page represents close account service. REST service is implemeted.
+This page represents close account service. REST service is implemeted. Validation is implemented.
 
 ### My Accounts (New)
 This page represents user accounts service. REST service is implemented. 

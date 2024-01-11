@@ -96,6 +96,8 @@ public class AccountService {
         account.setCurrency(newCurrency);
         account.setAmount(newAmount);
 
+        account = accountRepository.save(account);
+
         return accountMapper.accountToAccountDto(account);
     }
 

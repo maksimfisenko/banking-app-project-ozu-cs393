@@ -44,9 +44,13 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args){
 
-        Currency currencyTest = new Currency(null, "Dollar", '$', 1);
-        CurrencyDTO currencyDTO = currencyService.createCurrency(
-                currencyMapper.currencyToCurrencyDto(currencyTest));
+        Currency dollar = new Currency(null, "Dollar", '$', 1);
+        CurrencyDTO currencyDTO1 = currencyService.createCurrency(
+                currencyMapper.currencyToCurrencyDto(dollar));
+
+        Currency turkishLira = new Currency(null, "Turkish Lira", '₺', 0.033);
+        CurrencyDTO currencyDTO2 = currencyService.createCurrency(
+                currencyMapper.currencyToCurrencyDto(turkishLira));
 
         AccountType accountTypeTest = new AccountType(null, "Simple",
                 "Just very simple", 0);
@@ -65,21 +69,21 @@ public class DataInitializer implements ApplicationRunner {
                 userMapper.userToUserDto(userTest2));
 
         Account accountTest1 = new Account(null, "TestAccount_1",
-                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                currencyMapper.currencyDtoToCurrency(currencyDTO1),
                 accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 1000, LocalDate.now(),
                 userMapper.userDtoToUser(userDTO1), null, null, null);
         AccountDTO accountDTO = accountService.createAccount(
                 accountMapper.accountToAccountDto(accountTest1));
 
         Account accountTest2 = new Account(null, "TestAccount_2",
-                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                currencyMapper.currencyDtoToCurrency(currencyDTO1),
                 accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 2000, LocalDate.now(),
                 userMapper.userDtoToUser(userDTO1), null, null, null);
         AccountDTO accountDTO2 = accountService.createAccount(
                 accountMapper.accountToAccountDto(accountTest2));
 
         Account accountTest3 = new Account(null, "TestAccount_3",
-                currencyMapper.currencyDtoToCurrency(currencyDTO),
+                currencyMapper.currencyDtoToCurrency(currencyDTO1),
                 accountTypeMapper.accountTypeDtoToAccountType(accountTypeDTO), 2000, LocalDate.now(),
                 userMapper.userDtoToUser(userDTO2), null, null, null);
         AccountDTO accountDTO3 = accountService.createAccount(

@@ -4,6 +4,7 @@
     <title> Change Currency </title>
     <link rel="stylesheet" href="styles/header_styles.css">
     <link rel="stylesheet" href="styles/general.css">
+    <script src="js/changeCurrency.js"></script>
 </head>
 <body>
     <div class="Head">
@@ -20,16 +21,12 @@
         </div>
     </div>
     <div class="Change_Currency">
-        <form class="Change_Currency_Form">
-            <label for="currency_account"> Select an account </label><br>
-            <select id="currency_account">
-
-            </select><br>
+        <form class="Change_Currency_Form" id="change-currency-form">
+            <label for="currency-account"> Select an account </label><br>
+            <select id="currency-account"></select><br>
             <label id="amount"> Current amount: </label><br>
             <label for="currency"> Select new currency </label><br>
-            <select id="currency">
-            
-            </select><br>
+            <select id="currency"></select><br>
             <input type="submit" id="currency_button" value="Confirm">
         </form>
     </div>

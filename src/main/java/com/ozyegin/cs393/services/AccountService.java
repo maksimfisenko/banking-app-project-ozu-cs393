@@ -2,6 +2,7 @@ package com.ozyegin.cs393.services;
 
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.*;
 import com.ozyegin.cs393.mappers.*;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -181,6 +183,17 @@ public class AccountService {
         }
 
         return currentAmount;
+    }
+
+    //New Service 2: Get all account's debit cards
+    public List<DebitCardDTO> getAllAccountsDebitCards(Long number){
+        Account account = accountRepository.findById(number).orElseThrow(() ->
+                new EntityNotFoundException("Account with id " + number + " not found"));
+        List<DebitCard> debitCards = account.getDebitCards();
+        List<DebitCardDTO> res = new ArrayList<>();
+        for (DebitCard curDC: debitCards)
+            res.add(debitCardMapper.debitCardtoDebitCardDto(curDC));
+        return res;
     }
 
 }

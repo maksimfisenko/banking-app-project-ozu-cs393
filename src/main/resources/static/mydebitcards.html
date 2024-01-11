@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 
 <head>
-    <title> New Debit Card </title>
+    <title> Change Currency </title>
     <link rel="stylesheet" href="styles/header_styles.css">
     <link rel="stylesheet" href="styles/general.css">
-    <script src="js/newCard.js"></script>
+    <link rel="stylesheet" href="styles/mydebitcards.css">
+    <script src="js/myDebitCards.js"></script>
 </head>
 <body>
     <div class="Head">
@@ -22,13 +23,17 @@
             <a href="mydebitcards.html" class="Menu_Item"> My Debit Cards </a>
         </div>
     </div>
-    <div class="New_Card">
-        <form class="New_Card_Form" id="new-card-form">
-            <label for="card-account"> Select an account to open a new card </label><br>
-            <select id="card-account"></select><br>
-            <label for="card-name"> Select new card name </label><br>
-            <input type="text" id="card-name"><br>
-            <input type="submit" value="Create New Card" id="create-card-button">
+
+    <div class="Choose Account">
+        <form class="Choose_Account_Form">
+            <label for="choose_account"> Select an account </label><br>
+            <select id="choose_account">
+
+            </select><br>
+            <input type="submit" value="Get all debit cards" id="get_cards_button"> 
         </form>
+    </div>
+    <div class="DebitCardsInfo">
+
     </div>
 </body>

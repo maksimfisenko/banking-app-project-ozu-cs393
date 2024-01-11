@@ -1,6 +1,7 @@
 package com.ozyegin.cs393.controllers;
 
 
+import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.dto.UserDTO;
 import com.ozyegin.cs393.services.UserService;
@@ -101,5 +102,16 @@ public class UserController {
         } else {
             return new ResponseEntity<>(debitCardDTOS, HttpStatus.OK);
         }
+    }
+
+    //New Service 1: Get all accounts belonging to the User
+    @GetMapping("/accounts/{id}")
+    public ResponseEntity<List<AccountDTO>> getAllUserAccounts(@PathVariable Long id){
+        List<AccountDTO> accountDTOS = userService.getAllUserAccounts(id);
+
+        if (accountDTOS.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(accountDTOS, HttpStatus.OK);
     }
 }

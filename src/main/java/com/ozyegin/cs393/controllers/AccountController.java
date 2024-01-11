@@ -3,6 +3,7 @@ package com.ozyegin.cs393.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozyegin.cs393.dto.AccountDTO;
 import com.ozyegin.cs393.dto.CurrencyDTO;
+import com.ozyegin.cs393.dto.DebitCardDTO;
 import com.ozyegin.cs393.services.AccountService;
 import com.ozyegin.cs393.services.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,7 @@ public class AccountController {
     }
 
     // Service 6: Get Money By Date
-    @GetMapping("getByDate/{accountNumber}/{dateString}")
+    @GetMapping("/getByDate/{accountNumber}/{dateString}")
     public ResponseEntity<Double> getAmountOnSelectedDate(@PathVariable Long accountNumber, @PathVariable String dateString){
 
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
@@ -168,6 +169,16 @@ public class AccountController {
         double res = accountService.getAmountOnSelectedDate(accountDTO, date);
 
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    //New Service 2: Get all account's debit cards
+    @GetMapping("/debitCards/{number}")
+    public ResponseEntity<List<DebitCardDTO>> getAllAccountsDebitCards(@PathVariable Long number){
+        List<DebitCardDTO> debitCards = accountService.getAllAccountsDebitCards(number);
+        if (debitCards.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(debitCards, HttpStatus.OK);
     }
 
 }

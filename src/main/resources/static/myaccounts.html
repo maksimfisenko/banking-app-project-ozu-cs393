@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="styles/header_styles.css">
         <link rel="stylesheet" href="styles/general.css">
         <link rel="stylesheet" href="styles/myaccounts.css">
+        <script src="js/myAccounts.js"></script>
     </head>
     
     <body> 
@@ -24,9 +25,18 @@
                 <a href="mydebitcards.html" class="Menu_Item"> My Debit Cards </a>  
             </div>
         </div>
-        <p class="Accounts_Info"> My accounts' numbers: </p>
-        <div class="Accounts_Info">
-            
-        </div>
+        <p class="Accounts_Info"> My accounts: </p>
+        <table class="Accounts_Table">
+            <thead>
+            <tr>
+                <th>Account Number</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Opening Date</th>
+            </tr>
+            </thead>
+            <tbody id="accounts-body"></tbody>
+        </table>
     </body>
 </html>

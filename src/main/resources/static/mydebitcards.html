@@ -27,13 +27,21 @@
     <div class="Choose Account">
         <form class="Choose_Account_Form">
             <label for="choose_account"> Select an account </label><br>
-            <select id="choose_account">
-
-            </select><br>
-            <input type="submit" value="Get all debit cards" id="get_cards_button"> 
+            <select id="choose_account"></select><br>
+            <input type="submit" value="Show debit cards" id="get_cards_button">
         </form>
     </div>
     <div class="DebitCardsInfo">
-
+        <p class="Debit_Cards_Info"> My Debit Cards: </p>
+        <table class="Debit_Cards_Table">
+            <thead>
+            <tr>
+                <th>Debit Card Number</th>
+                <th>Name</th>
+                <th>Expiration Date</th>
+            </tr>
+            </thead>
+            <tbody id="debit-cards-body"></tbody>
+        </table>
     </div>
 </body>

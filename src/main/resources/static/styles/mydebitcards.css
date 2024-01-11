@@ -1,3 +1,33 @@
 .Debit_Card_Info{
     padding-left: 10px;
 }
+
+.Debit_Cards_Table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.Debit_Cards_Table_Table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+}
+
+.Debit_Cards_Table td, .Debit_Cards_Table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.Debit_Cards_Table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.Debit_Cards_Table tbody tr:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+}
+
+.Debit_Cards_Table th {
+    font-weight: bold;
+}

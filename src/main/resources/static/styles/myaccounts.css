@@ -1,3 +1,33 @@
 .Accounts_Info{
     padding-left: 10px;
 }
+
+.Accounts_Table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.Accounts_Table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+}
+
+.Accounts_Table td, .Accounts_Table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.Accounts_Table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.Accounts_Table tbody tr:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+}
+
+.Accounts_Table th {
+    font-weight: bold;
+}

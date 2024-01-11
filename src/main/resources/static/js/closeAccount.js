@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function (){
+
     const userId = 1;
     const apiUrl = `accounts/user/${userId}`;
 
-    const cardAccountSelect = document.getElementById("close_account");
+    const cardAccountSelect = document.getElementById("close-account");
 
     fetch(apiUrl)
         .then(response => response.json())

@@ -88,9 +88,6 @@ document.addEventListener("DOMContentLoaded", function (){
 
                 if (newCurrencyId != currentCurrencyId) {
 
-                    alert(accountNumber);
-                    alert(newCurrencyId);
-
                     const data = {
                         accountNumber: accountNumber,
                         currencyId: newCurrencyId

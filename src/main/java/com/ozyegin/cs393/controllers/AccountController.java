@@ -142,15 +142,15 @@ public class AccountController {
     @PutMapping("/transfer")
     public ResponseEntity<Double> transferMoney(@RequestBody Map<String, Object> requestBody){
 
-        Long sendingAccountId = objectMapper.convertValue(requestBody.get("sendingAccountId"), Long.class);
-        Long receivingAccountId = objectMapper.convertValue(requestBody.get("receivingAccountId"), Long.class);
+        Long sendingAccountNumber = objectMapper.convertValue(requestBody.get("sendingAccountNumber"), Long.class);
+        Long receivingAccountNumber = objectMapper.convertValue(requestBody.get("receivingAccountNumber"), Long.class);
         Double amount = objectMapper.convertValue(requestBody.get("amount"), Double.class);
 
-        if (sendingAccountId == null || receivingAccountId == null || amount == null) {
+        if (sendingAccountNumber == null || receivingAccountNumber == null || amount == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        double res = accountService.transferMoney(sendingAccountId, receivingAccountId, amount);
+        double res = accountService.transferMoney(sendingAccountNumber, receivingAccountNumber, amount);
 
         if (res == -1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

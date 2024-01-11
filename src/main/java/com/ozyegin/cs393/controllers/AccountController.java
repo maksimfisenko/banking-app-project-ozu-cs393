@@ -125,7 +125,9 @@ public class AccountController {
 
     // Service 3: Close Account
     @DeleteMapping("/close")
-    public ResponseEntity<Void> closeAccount(@RequestBody Long accountNumber){
+    public ResponseEntity<Void> closeAccount(@RequestBody Map<String, Object> requestBody){
+
+        Long accountNumber = objectMapper.convertValue(requestBody.get("accountNumber"), Long.class);
 
         AccountDTO accountDTO = accountService.getAccountByNumber(accountNumber);
 

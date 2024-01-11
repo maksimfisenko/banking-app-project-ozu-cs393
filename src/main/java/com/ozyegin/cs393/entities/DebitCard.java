@@ -1,6 +1,9 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -17,6 +20,7 @@ public class DebitCard {
     private String name;
     @ManyToOne
     @JoinColumn(name = "accountId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Account account;
 
     public DebitCard() {

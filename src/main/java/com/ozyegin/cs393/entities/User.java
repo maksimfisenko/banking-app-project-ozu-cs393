@@ -1,6 +1,9 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -18,8 +21,8 @@ public class User {
     private String phoneNumber;
     @Column(nullable = false)
     private String email;
-
     @OneToMany(mappedBy = "owner")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Account> accounts;
 
     public User() {

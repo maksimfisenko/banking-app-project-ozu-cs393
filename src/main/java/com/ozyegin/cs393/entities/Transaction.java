@@ -1,6 +1,9 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,14 +14,17 @@ public class Transaction {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "sendingAccountId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Account sendingAccount;
     @ManyToOne
     @JoinColumn(name = "receivingAccountId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Account receivingAccount;
     @Column(nullable = false)
     private LocalDateTime timeOfTransaction;
     @ManyToOne
     @JoinColumn(name = "currencyId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Currency currency;
     @Column(nullable = false)
     private double amount;

@@ -7,6 +7,7 @@ import com.ozyegin.cs393.dto.TransactionDTO;
 import com.ozyegin.cs393.entities.*;
 import com.ozyegin.cs393.mappers.*;
 import com.ozyegin.cs393.repositories.AccountRepository;
+import com.ozyegin.cs393.repositories.DebitCardRepository;
 import com.ozyegin.cs393.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import java.util.List;
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private DebitCardRepository debitCardRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -74,6 +77,7 @@ public class AccountService {
     }
 
     public void deleteAccountByNumber(Long accountNumber) {
+        debitCardRepository.deleteAllByAccountNumber(accountNumber);
         accountRepository.deleteById(accountNumber);
     }
 

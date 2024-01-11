@@ -1,6 +1,9 @@
 package com.ozyegin.cs393.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -30,12 +33,16 @@ public class Account {
     private LocalDate openingDate;
     @ManyToOne
     @JoinColumn(name = "ownerId")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User owner;
     @OneToMany(mappedBy = "sendingAccount")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Transaction> sentTransactions;
     @OneToMany(mappedBy = "receivingAccount")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Transaction> receivedTransactions;
     @OneToMany(mappedBy = "account")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<DebitCard> debitCards;
 
     public Account() {

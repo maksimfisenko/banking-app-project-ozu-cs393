@@ -1,5 +1,11 @@
 .Debit_Card_Info{
-    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.DebitCardsInfo{
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .Debit_Cards_Table {

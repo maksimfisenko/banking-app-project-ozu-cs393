@@ -21,7 +21,7 @@ This page represents open a new debit card service. REST service is implemeted. 
 This page represents change currency service. REST service is implemeted. Validation is implemented.
 
 ### Close Account
-This page represents close account service. REST service is implemeted.
+This page represents close account service. REST service is implemeted. Validation is implemented.
 
 ### My Accounts (New)
 This page represents user accounts service. REST service is implemented. 
@@ -29,7 +29,7 @@ This page represents user accounts service. REST service is implemented.
 ### My Debit Cards (New)
 This page represents account debit cards service. REST service is implemented.
 
-This pages can be used to opening a new debit card over existing account or to change the currency on the existing account. 
+Theese pages can be used to manage your existing accounts: transfering money, changing currency, openning new cards, closing them, etc.
 
 ## Important Info
 Server port of the app is **8081**.

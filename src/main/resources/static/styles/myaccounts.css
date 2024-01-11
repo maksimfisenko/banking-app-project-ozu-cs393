@@ -1,5 +1,6 @@
 .Accounts_Info{
-    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .Accounts_Table {
@@ -11,7 +12,7 @@
 .Accounts_Table th {
     background-color: #f2f2f2;
     padding: 10px;
-    text-align: left;
+    text-align: center;
 }
 
 .Accounts_Table td, .Accounts_Table th {
